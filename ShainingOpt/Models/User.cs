@@ -12,8 +12,9 @@ namespace ShainingOpt.Models
         public override string Email { get; set; }
 
         [Display(Name = "Телефон")]
+        [Required(ErrorMessage = "Введите номер телефона")]
         [Phone(ErrorMessage = "Некорректный номер телефона")]
-        public override string? PhoneNumber { get; set; }
+        public override string PhoneNumber { get; set; }
 
 
         public Role? Role { get; set; }

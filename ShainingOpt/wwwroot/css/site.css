@@ -1,31 +1,262 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 body {
-  margin-bottom: 60px;
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+.main {
+    min-height: 100vh;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 10px;
+}
+
+.btn {
+    font-weight: 550;
+    text-wrap: nowrap;
+    border-radius: 86px;
+    background-color: black;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    padding: 16px 31px;
+}
+
+.btn--white {
+    color: black;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+.btn:active {
+    transform: scale(0.90);
+}
+
+.btn--white:hover {
+    border: 1.5px solid black;
+}
+
+.logo {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+    letter-spacing: 5px;
+}
+
+
+/* HEADER */
+.header {
+    width: 100%;
+}
+
+.header__container {
+    /* flex-wrap: wrap; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.header__logo {
+}
+
+.header__nav {
+}
+
+.header__menu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 50px;
+}
+
+.header__item {
+    font-weight: 550;
+    transition: all 0.3s ease;
+}
+
+    .header__item:hover {
+        transform: scale(1.1);
+    }
+
+.header__link {
+}
+
+.header__search {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    min-width: 70px;
+    max-width: 700px;
+    height: 50px;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.header__search-input {
+    background-color: rgba(0, 0, 0, 0.1);
+    width: 100%;
+    padding: 10px 45px 10px 10px;
+}
+
+    .header__search-input:hover + .header__search-icon {
+        transform: rotate(90deg) scale(1.05);
+    }
+
+.header__search-icon {
+    transition: all 1s ease;
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .header__search-icon:hover {
+        transform: scale(1.05);
+    }
+
+.header__actions {
+    display: flex;
+    gap: 30px;
+}
+
+.header__action-btn {
+    transition: all 0.3s ease;
+}
+
+    .header__action-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .header__action-btn img{
+        display:block;
+        width:30px;
+        height:30px;
+    }
+
+/* FOOTER */
+.footer {
+    width: 100%;
+    background-color: #F7F7F7;
+}
+
+.footer__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px;
+    align-items: center;
+}
+
+.footer__logo {
+}
+
+.footer__contacts {
+    display: flex;
+    gap: 20px;
+}
+
+.footer__link {
+}
+
+.footer__legal {
+    display: flex;
+    gap: 20px;
+}
+
+.footer__policy {
+}
+
+.footer__copyright {
+}
+
+@media (max-width: 768px) {
+
+    .header__logo {
+        font-size: 20px;
+    }
+
+    .footer__logo {
+        font-size: 18px;
+    }
+
+    .footer__contacts,
+    .footer__legal {
+        font-size: 12px;
+    }
+}
+
+@media(max-width: 576px) {
+    .header__menu {
+        gap: 20px;
+        font-size: 12px;
+    }
+
+    .header__search-input::placeholder {
+        font-size: 10px;
+    }
+
+    .header__search {
+        height: 40px;
+    }
+
+    .header__search-input {
+        font-size: 12px;
+        padding: 5px 5px 5px 5px;
+    }
+
+    .header__logo {
+        font-size: 14px;
+    }
+
+    .header__actions {
+        gap: 15px;
+    }
+
+    .header__search-icon {
+        display: none;
+    }
+
+    .header__action-btn img {
+        width: 15px;
+        height: 15px;
+        display: block;
+    }
+}
+
+@media(max-width: 400px) {
+    .header__container {
+        gap: 8px
+    }
+
+    .header__menu {
+        gap: 5px;
+        font-size: 10px;
+    }
+
+    .header__search-input::placeholder {
+        font-size: 9px;
+    }
+
+    .header__logo {
+        font-size: 11px;
+    }
+
+    .header__actions {
+        gap: 5px;
+    }
+
+    .footer__contacts,
+    .footer__legal {
+        font-size: 10px;
+    }
 }

@@ -1,8 +1,128 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Главная";
 }
+<link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+<section class="main__hero hero">
+    <div class="hero__container container">
+        <div class="hero__content">
+            <h1 class="hero__title">
+                Оптовые поставки одежды напрямую со склада
+            </h1>
+            <p class="hero__info">
+                Сегодня компания выступает надёжным партнёром для оптовых покупателей,
+                обеспечивая стабильные поставки, прозрачные условия сотрудничества и высокий уровень сервиса.
+            </p>
+            @* сделать *@
+            <a asp-action="Index" asp-controller="Catalog" class="hero__btn btn">Перейти в каталог</a>
+            <ul class="hero__stats">
+                <li class="hero__row">
+                    <span class="hero__digit">200+</span>
+                    <span class="hero__desc">Международных брендов</span>
+                </li>
+                <li class="hero__row">
+                    <span class="hero__digit">2,000+</span>
+                    <span class="hero__desc">Высококачественных товаров</span>
+                </li>
+                <li class="hero__row">
+                    <span class="hero__digit">30,000+</span>
+                    <span class="hero__desc">Довольных заказчиков</span>
+                </li>
+            </ul>
+        </div>
+        <div class="hero__img">
+            <img src="~/img/index/hero.png" alt="">
+        </div>
+    </div>
+</section>
+<section class="main__catrgory category">
+    <div class="category__container container">
+        <h2 class="categoty__title">КАТЕГОРИИ</h2>
+        <p class="category__subtitle">Сотни проверенных брендов и тысячи моделей доступны для оптового заказа прямо сейчас.</p>
+        <ul class="category__items">
+            <li class="category__item">
+                <div class="category__item-img"> <img src="~/img/index/jacket.jpg" alt=""></div>
+                <span class="category__item-title">Одежда</span>
+            </li>
+            <li class="category__item">
+                <div class="category__item-img"><img src="~/img/index/boots.jpg" alt=""></div>
+                <span class="category__item-title">Обувь</span>
+            </li>
+            <li class="category__item">
+                <div class="category__item-img"><img src="~/img/index/cap.jpg" alt=""></div>
+                <span class="category__item-title">Аксессуары</span>
+            </li>
+        </ul>
+    </div>
+</section>
+<section class="main__about about">
+    <div class="container about__container">
+        <div class="about__inner">
+            <h2 class="about__title">Почему выбирают нас</h2>
+            <ul class="about__items">
+                <li class="about__item">
+                    <div class="about__item-img"> <img src="~/img/index/icons/assortment_icon.svg" alt=""></div>
+                    <div class="about__item-content">
+                        <h3 class="about__item-title">Широкий ассортимент товаров</h3>
+                        <p class="about__item-desc">регулярное обновление коллекций и наличие популярных моделей на складе</p>
+                    </div>
+                </li>
+                <li class="about__item">
+                    <div class="about__item-img"> <img src="~/img/index/icons/price_icon.svg" alt=""></div>
+                    <div class="about__item-content">
+                        <h3 class="about__item-title">Конкурентные оптовые цены</h3>
+                        <p class="about__item-desc">прямые поставки от производителей без посредников</p>
+                    </div>
+                </li>
+                <li class="about__item">
+                    <div class="about__item-img"> <img src="~/img/index/icons/logistics_icon.svg" alt=""></div>
+                    <div class="about__item-content">
+                        <h3 class="about__item-title">Надёжная логистика</h3>
+                        <p class="about__item-desc">сотрудничество с проверенными службами доставки и контроль отправлений</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    </div>
+</section>
+<section class="main__steps steps">
+    <div class="container steps__conteiner">
+        <ul class="steps__actions">
+            <li class="steps__action">
+                <div class="steps__action-icon">
+                    <img src="./img/index/icons/register.svg" alt="">
+                </div>
+                <span class="steps__action-desc">Зарегистрируйтесь</span>
+            </li>
+            <li class="steps__action-arrow">
+                <img src="~/img/index/icons/arrow_icon.svg" alt="">
+            </li>
+            <li class="steps__action">
+                <div class="steps__action-icon">
+                    <img src="~/img/index/icons/assortment_icon.svg" alt="">
+                </div>
+                <span class="steps__action-desc">Выберите товары</span>
+            </li>
+            <li class="steps__action-arrow">
+                <img src="~/img/index/icons/arrow_icon.svg" alt="">
+            </li>
+            <li class="steps__action">
+                <div class="steps__action-icon">
+                    <img src="~/img/index/icons/order_icon.svg" alt="">
+                </div>
+                <span class="steps__action-desc">Оформите заказ</span>
+            </li>
+            <li class="steps__action-arrow">
+                <img src="~/img/index/icons/arrow_icon.svg" alt="">
+            </li>
+            <li class="steps__action">
+                <div class="steps__action-icon">
+                    <img src="~/img/index/icons/logistics_icon.svg" alt="">
+                </div>
+                <span class="steps__action-desc">Получите доставку</span>
+            </li>
+        </ul>
+        @* сделать *@
+        <a asp-action="Register" asp-controller="Account" class="steps__btn btn btn--white"> Зарегестрироваться</a>
+    </div>
+</section>
