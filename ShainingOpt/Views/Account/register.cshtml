@@ -1,4 +1,6 @@
-﻿@{
+﻿@using ShainingOpt.ViewModels
+@model RegisterViewModel
+@{
     ViewData["Title"] = "Регистрация";
     Layout = null;
 }
@@ -16,16 +18,16 @@
 <div class="auth__container container">
     <a asp-action="Index" asp-controller="Home"" class="form__title">ShainingOpt</a>
     <form class="form"  method="post" asp-action="Register" asp-controller="Account">
-                
-    
+         @Html.AntiForgeryToken()    
+         <div asp-validation-summary="All" class="form__error" ></div>
         <div class=" form__row">
             <div class=" form__field">
                 <label class=" form__label" for="companyName">Название компании</label>
-                <input class=" form__input" id="companyName" name="СompanyName" type="text" placeholder="Введите название компании">
+                <input class=" form__input" id="companyName" asp-for="CompanyName" type="text" placeholder="Введите название компании">
             </div>
             <div class=" form__field">
                 <label class=" form__label" for="contactPerson">Представительное лицо</label>
-                <input class=" form__input" id="contactPerson" name="СontactPerson" type="text" 
+                <input class=" form__input" id="contactPerson" asp-for="ContactPerson" type="text" 
                          placeholder="Введите ФИО">
             </div>
         </div>
@@ -33,12 +35,12 @@
         <div class=" form__row">
             <div class=" form__field">
                 <label class=" form__label" for="email">Email</label>
-                <input class=" form__input" id="email" name="Еmail" type="email"
+                <input class=" form__input" id="email" asp-for="Email" type="text"
                        >
             </div>
             <div class=" form__field">
                 <label class=" form__label" for="phone">Телефон</label>
-                <input class=" form__input" id="phone" name="PhoneNumber" type="tel" 
+                <input class=" form__input" id="phone" asp-for="PhoneNumber" type="tel" 
                         placeholder="+7/8XXXXXXXXXX">
             </div>
         </div>
@@ -46,23 +48,23 @@
         <div class=" form__row">
             <div class=" form__field">
                 <label class=" form__label" for="password">Пароль</label>
-                <input class=" form__input" id="password" name="Password" type="password" placeholder="Введите пароль">
+                <input class=" form__input" id="password" asp-for="Password" type="password" placeholder="Введите пароль">
             </div>
             <div class=" form__field">
                 <label class=" form__label" for="address">Адрес</label>
-                <input class=" form__input" id="address" name="LegalAddress" type="text" placeholder="Введите адрес">
+                <input class=" form__input" id="address" asp-for="LegalAddress" type="text" placeholder="Введите адрес">
             </div>
         </div>
     
         <div class=" form__row">
             <div class=" form__field">
                 <label class=" form__label" for="inn">ИНН</label>
-                <input class=" form__input" id="inn" name="inn" type="text"
+                <input class=" form__input" id="inn" asp-for="Inn" type="text"
                         placeholder="Введите 10 цифр">
             </div>
             <div class=" form__field">
                 <label class=" form__label" for="kpp">КПП</label>
-                <input class=" form__input" id="kpp" name="kpp" type="text"  placeholder="Введите 9 цифр">
+                <input class=" form__input" id="kpp" asp-for="Kpp" type="text"  placeholder="Введите 9 цифр">
             </div>
         </div>
     

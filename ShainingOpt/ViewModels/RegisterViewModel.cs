@@ -10,12 +10,12 @@ namespace ShainingOpt.ViewModels
 
         [Display(Name = "ИНН")]
         [Required(ErrorMessage = "Введите ИНН")]
-        [StringLength(10, ErrorMessage = "ИНН должен содержать 10 символов")]
+        [RegularExpression(@"^[0-9]{10}$", ErrorMessage = "ИНН должен состоять только из 10 цифр")]
         public string Inn { get; set; }
 
         [Display(Name = "КПП")]
         [Required(ErrorMessage = "Введите КПП")]
-        [StringLength(9, ErrorMessage = "КПП должен содержать 9 символов")]
+        [RegularExpression(@"^[0-9]{9}$", ErrorMessage = "КПП должен состоять только из 9 цифр")]
         public string Kpp { get; set; }
 
         [Display(Name = "Юридический адрес")]
@@ -33,10 +33,14 @@ namespace ShainingOpt.ViewModels
 
         [Required(ErrorMessage = "Введите номер телефона")]
         [Phone(ErrorMessage = "Некорректный номер телефона")]
+        [RegularExpression(@"^(\+7|8)[0-9]{10}$", ErrorMessage = "Формат номера: +79991234567 или 89991234567")]
         public string PhoneNumber { get; set; }
 
 
         [Required(ErrorMessage ="Введите пароль")]
+        [MinLength(6, ErrorMessage ="Длина пароля не меньше 6 символов")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).+$",
+    ErrorMessage = "Пароль должен содержать: хотя бы одну цифру, одну заглавную букву, одну строчную букву и один спецсимвол")]
         public string Password { get; set; }
     }
 }

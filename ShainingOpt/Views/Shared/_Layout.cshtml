@@ -1,4 +1,5 @@
-﻿
+﻿@using ShainingOpt.ViewModels
+@model LoginViewModel
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -14,6 +15,9 @@
           rel="stylesheet">
     <link rel="stylesheet" href="~/css/reset.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/form.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/popup.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
     @* <link rel="stylesheet" href="~/ShainingOpt.styles.css" asp-append-version="true" /> *@
 </head>
 <body>
@@ -47,9 +51,47 @@
                     <img src="~/img/header/basket.svg" alt="Корзина">
                 </a>
                     @* сделать *@
-                <a asp-action="Index" asp-controller="Profile" class="header__action-btn">
+
+                @if (User.Identity.IsAuthenticated)
+                    {
+                        <a asp-action="Profile" asp-controller="Account" class="header__action-btn">
                     <img src="~/img/header/login.svg" alt="Профиль">
                 </a>
+                        
+                    }
+                    else
+                    {
+                <a class="header__action-btn  header__login-btn">
+                    <img src="~/img/header/login.svg" alt="Профиль">
+                </a>
+                 <div class="popup">
+                <div class="popup__container">
+                    <div class="popup__close">X</div>
+                    <h1 class="popup__title">Вход</h1>
+                
+    
+        <div class="form__error">
+            
+        </div>
+    
+                    <form id="loginForm" asp-action="Login" asp-controller="Account" class="popup__form form">
+                        <div class=" form__field popup__field">
+                            <label class=" form__label" for="email">Email</label>
+                            <input class=" form__input" id="email" asp-for="Email" type="email">
+                        </div>
+                        <div class=" form__field popup__field">
+                            <label class=" form__label" for="password">Пароль</label>
+                            <input class=" form__input" id="password" asp-for="Password" type="password" placeholder="Введите пароль">
+                        </div>
+                        <a asp-action="ResetPassword" asp-controller="Account" class="form__foggot-password">Забыли пароль?</a>
+                        <div class="form__btns">
+                            <button class="form__btn btn" type="submit">Войти</button>
+                            <a asp-action="Register" asp-controller="Account" class="form__btn btn btn--white" >Зарегистрироваться</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+                    }
             </div>
 
         </div>
@@ -57,6 +99,7 @@
     <main class="main">
        @RenderBody()
     </main>
+           
     <footer class="footer">
         <div class="footer__container container">
             <a asp-action="Index" asp-controller="Home" class="footer__logo logo">ShiningOpt</a>

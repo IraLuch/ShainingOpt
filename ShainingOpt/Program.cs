@@ -1,8 +1,11 @@
+using ShainingOpt.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShainingOpt.DataBase;
 using ShainingOpt.Models;
+using ShainingOpt.ViewModels;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews( options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 builder.Services.AddIdentity<User, Role>(options =>
 {
@@ -43,6 +47,16 @@ builder.Services.AddIdentity<User, Role>(options =>
 // (нужны для сброса пароля, подтверждения email и т.д.)
 .AddDefaultTokenProviders();
 
+builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<EmailService>();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/";
+});
+
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -52,7 +66,21 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+using (var scope = app.Services.CreateScope())
+{
+    //вытаскиваем RoleManager из ДИ
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
 
+    string[] roles = { "Admin", "Manager", "Client" };
+
+    foreach (var roleName in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(roleName))
+        {
+            await roleManager.CreateAsync(new Role { Name = roleName });
+        }
+    }
+} 
 app.UseHttpsRedirection();
 app.UseRouting();
 
