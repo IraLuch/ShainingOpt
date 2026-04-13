@@ -1,5 +1,4 @@
-﻿@using ShainingOpt.ViewModels
-@model LoginViewModel
+﻿
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -77,11 +76,11 @@
                     <form id="loginForm" asp-action="Login" asp-controller="Account" class="popup__form form">
                         <div class=" form__field popup__field">
                             <label class=" form__label" for="email">Email</label>
-                            <input class=" form__input" id="email" asp-for="Email" type="email">
+                            <input class=" form__input" id="email" name="Email" type="email">
                         </div>
                         <div class=" form__field popup__field">
                             <label class=" form__label" for="password">Пароль</label>
-                            <input class=" form__input" id="password" asp-for="Password" type="password" placeholder="Введите пароль">
+                            <input class=" form__input" id="password" name="Password" type="password" placeholder="Введите пароль">
                         </div>
                         <a asp-action="ResetPassword" asp-controller="Account" class="form__foggot-password">Забыли пароль?</a>
                         <div class="form__btns">

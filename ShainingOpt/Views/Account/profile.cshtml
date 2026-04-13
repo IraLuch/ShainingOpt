@@ -1,3 +1,5 @@
+@using ShainingOpt.ViewModels
+@model ProfileViewModel
 @{
     Layout = "_Layout";
 }
@@ -5,8 +7,8 @@
         <section class="main__info info">
             <div class="container info__container">
                 <div class="info__company">
-                    <h1 class="info__company-name"> OOO "СтройРесурс"</h1>
-                    <span class="info__company-id">id - 12343</span>
+                    <h1 class="info__company-name">@Model.CompanyName </h1>
+                    <span class="info__company-id">id - @Model.Id</span>
                 </div>
                 <div class="info__btns">
                     <a href="" class="info__btn btn">Мои заказы</a>
@@ -16,32 +18,32 @@
         </section>
         <section class="main_profile profile">
             <div class="container profile__container">
-                <form class="form form__card" action="" method="post">
+                <form class="form form__card" action="" method="post" novalidate>
+            <div asp-validation-summary="All" class="form__error"></div>
                 <h2 class="profile__title title">Данные организации</h2>
                 
     
                 <div class=" form__row">
                     <div class=" form__field">
                         <label class=" form__label" for="companyName">Название компании</label>
-                        <input class=" form__input" id="companyName" name="companyName" type="text" placeholder="Введите название компании"  >
+                        <input class=" form__input" id="companyName" asp-for="CompanyName" type="text" placeholder="Введите название компании" value="@Model.CompanyName"  >
                     </div>
                     <div class=" form__field">
                         <label class=" form__label" for="contactPerson">Представительное лицо</label>
-                        <input class=" form__input" id="contactPerson" name="contactPerson" type="text" maxlength="200"
-                            pattern="[А-Яа-яЁё\s\-]{2,}" title="Некорректный формат" placeholder="Введите ФИО"  >
+                        <input class=" form__input" id="contactPerson" asp-for="ContactPerson" type="text"  placeholder="Введите ФИО"  value="@Model.ContactPerson" >
                     </div>
                 </div>
     
                 <div class=" form__row">
                     <div class=" form__field">
                         <label class=" form__label" for="email">Email</label>
-                        <input class=" form__input" id="email" name="email" type="email"
+                        <input class=" form__input" id="email" asp-for="Email" type="email" value="@Model.Email"
                              placeholder="example@mail.ru"  >
                     </div>
                     <div class=" form__field">
                         <label class=" form__label" for="phone">Телефон</label>
-                        <input class=" form__input" id="phone" name="phone" type="tel" pattern="\+7[0-9]{10}"
-                            title="Формат: +7XXXXXXXXXX" placeholder="+7XXXXXXXXXX"  >
+                        <input class=" form__input" id="phone" asp-for="Phone" type="tel" value="@Model.Phone"
+                             placeholder="+7/8XXXXXXXXXX"  >
                     </div>
                 </div>
     
@@ -49,51 +51,51 @@
                   
                     <div class=" form__field form__field">
                         <label class=" form__label" for="kpp">Кпп</label>
-                        <input class=" form__input" id="kpp" name="kpp" type="text" maxlength="9" pattern="\d{9}"
-                        title="КПП должен содержать 9 цифр" placeholder="Введите 9 цифр"  >
+                        <input class=" form__input" id="kpp" asp-for="Kpp" type="text" value="@Model.Kpp"
+                       placeholder="Введите 9 цифр"  >
                     </div>
                     <div class=" form__field">
                         <label class=" form__label" for="inn">ИНН</label>
-                        <input class=" form__input" id="inn" name="inn" type="text" maxlength="10" pattern="\d{10}"
-                        title="ИНН должен содержать 10 цифр" placeholder="Введите 10 цифр"  >
+                        <input class=" form__input" id="inn" asp-for="Inn" type="text" value="@Model.Inn"  placeholder="Введите 10 цифр"  >
                     </div>
                 </div>
                 
                 <div class=" form__row">
                     <div class="form__field form__field--fullwidth">
                         <label class=" form__label" for="address">Адрес</label>
-                        <input class=" form__input" id="address" name="address" type="text" placeholder="Введите адрес"  >
+                        <input class=" form__input" id="address" asp-for="Address" value="@Model.Address" type="text" placeholder="Введите адрес"  >
                     </div>
                 </div>
     
-                <button class=" form__card-btn btn" type="submit">Сохранить данные</button>
+                <button class=" form__card-btn btn" type="submit" name="action" value="companyData">Сохранить данные</button>
             </form>
         </div>
         </section>
         <section class="security">
             <div class="container security__container">
                 <form class="form form__card" action="" method="post">
+                    <div asp-validation-summary="All" class="form__error"></div>
                 <h2 class="security__title title">Безопасность</h2>
                 
     
                 <div class=" form__row">
                     <div class=" form__field">
                         <label class=" form__label" for="password">Пароль</label>
-                        <input class=" form__input" id="password" name="password" type="password" placeholder="Введите пароль"  >
+                        <input class=" form__input" id="password" asp-for="Password" type="password" placeholder="Введите пароль"  >
                     </div>
                    <div class=" form__field">
                         <label class=" form__label" for="newPassword">Новый пароль</label>
-                        <input class=" form__input" id="newPassword" name="newPassword" type="password" placeholder="Введите новый пароль"  >
+                        <input class=" form__input" id="newPassword" asp-for="NewPassword" type="password" placeholder="Введите новый пароль"  >
                     </div>
                 </div>
     
                 <div class=" form__row">
                     <div class=" form__field">
                         <label class=" form__label" for="confimPassword">Подтверждение</label>
-                        <input class=" form__input" id="confimPassword" name="confimPassword" type="password" placeholder="Подтверждение"  >
+                        <input class=" form__input" id="confimPassword" asp-for="ConfirmPassword" type="password" placeholder="Подтверждение"  >
                     </div>
                 </div>
-                <button class=" form__card-btn btn" type="submit">Сохранить данные</button>
+                <button class=" form__card-btn btn" name="action" value="securityData" type="submit">Сохранить данные</button>
                 </form>
                 </div>
         </section>
