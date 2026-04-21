@@ -12,14 +12,28 @@
                 </div>
                 <div class="info__btns">
                     <a href="" class="info__btn btn">Мои заказы</a>
-                    <a href="" class="info__btn btn info__btn--red">Выйти</a>
+                    <a asp-controller="Account" asp-action="Logout" class="info__btn btn info__btn--red">Выйти</a>
                 </div>
             </div>
         </section>
         <section class="main_profile profile">
             <div class="container profile__container">
-                <form class="form form__card" action="" method="post" novalidate>
-            <div asp-validation-summary="All" class="form__error"></div>
+        <form class="form form__card" method="post" asp-action="UpdateProfileData"
+              asp-controller="Account" novalidate>
+
+                <div class="form__error">
+            @if (ViewData.ModelState["ProfileError"]?.Errors.Count > 0)
+                {
+                    <ul>
+                        @foreach (var error in ViewData.ModelState["ProfileError"].Errors)
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                    
+                }
+
+            </div>
                 <h2 class="profile__title title">Данные организации</h2>
                 
     
@@ -67,14 +81,26 @@
                     </div>
                 </div>
     
-                <button class=" form__card-btn btn" type="submit" name="action" value="companyData">Сохранить данные</button>
+                <button class=" form__card-btn btn" type="submit" asp-action="UpdateProfileData" asp-controller="Account">Сохранить данные</button>
             </form>
         </div>
         </section>
         <section class="security">
             <div class="container security__container">
-                <form class="form form__card" action="" method="post">
-                    <div asp-validation-summary="All" class="form__error"></div>
+                 <form class="form form__card" method="post" asp-action="UpdateSecurityDate" asp-controller="Account">   
+      <div class="form__error">
+            @if (ViewData.ModelState["SecurityError"]?.Errors.Count > 0)
+                {
+                    <ul>
+                        @foreach (var error in ViewData.ModelState["SecurityError"].Errors)
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                    
+                }
+
+            </div>
                 <h2 class="security__title title">Безопасность</h2>
                 
     
@@ -95,7 +121,7 @@
                         <input class=" form__input" id="confimPassword" asp-for="ConfirmPassword" type="password" placeholder="Подтверждение"  >
                     </div>
                 </div>
-                <button class=" form__card-btn btn" name="action" value="securityData" type="submit">Сохранить данные</button>
+                <button class=" form__card-btn btn" asp-action="UpdateSecurityDate" asp-controller="Account" type="submit">Сохранить данные</button>
                 </form>
                 </div>
         </section>

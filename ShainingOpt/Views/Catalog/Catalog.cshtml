@@ -1,0 +1,76 @@
+@model List<Product>
+
+@{
+    Layout = "_Layout";
+}
+<link rel="stylesheet" href="~/css/catalog.css" asp-append-version="true" />
+<div class="catalog">
+    <div class="catalog__container container">
+        <section class="filters">
+            <div class="filters__container container">
+                <form class="filter__groups">
+                    <div class="filter__group">
+                        <div class="filter__title">Категория</div>
+                        <ul class="filter__items">
+                            <li class="filter__item"><input type="checkbox">Одежда</li>
+                            <li class="filter__item"><input type="checkbox">Брюки</li>
+                        </ul>
+                    </div>
+                    <div class="filter__group">
+                        <div class="filter__title">Бренд</div>
+                        <ul class="filter__items">
+                            <li class="filter__item"><input type="checkbox">авыа</li>
+                            <li class="filter__item"><input type="checkbox">авыаы</li>
+                        </ul>
+                    </div>
+                    <div class="filter__group">
+                        <div class="filter__title">Цвет</div>
+                        <ul class="filter__items">
+                            <li class="filter__item"><input type="checkbox">авыа</li>
+                            <li class="filter__item"><input type="checkbox">авыаы</li>
+                        </ul>
+                    </div>
+                    <div class="filter__group">
+                        <div class="filter__title">Размер</div>
+                        <ul class="filter__items">
+                            <li class="filter__item"><input type="checkbox">авыа</li>
+                            <li class="filter__item"><input type="checkbox">авыаы</li>
+                            <li class="filter__item"><input type="checkbox">авыа</li>
+                            <li class="filter__item"><input type="checkbox">авыаы</li>
+                            <li class="filter__item"><input type="checkbox">авыа</li>
+                            <li class="filter__item"><input type="checkbox">авыаы</li>
+                            <li class="filter__item"><input type="checkbox">авыа</li>
+                            <li class="filter__item"><input type="checkbox">авыаы</li>
+                        </ul>
+                    </div>
+                    <div class="filter__group">
+                        <div class="filter__title">Цена</div>
+                        <ul class="filter__items">
+                            <li><input class="filter__price" type="number" name="minPrice" placeholder="От"></li>
+                            <li><input class="filter__price" type="number" name="maxPrice" placeholder="До"></li>
+                        </ul>
+                    </div>
+                </form>
+                <button class="btn btn--white filters__btn">Применить</button>
+            </div>
+        </section>
+        <section class="cards">
+            <div class="cards__container container">
+                <ul class="cards__grid">
+                    <li class="card">
+                        <div class="card__img">
+                            <img src="" alt="">
+                        </div>
+                        <form class="card__info">
+                            <div class="card__name">Boxy Wool Jacket</div>
+                            <div class="card__price">23 323P</div>
+                            <button class="card__btn btn">В корзину</button>
+                        </form>
+                    </li>
+                   
+                </ul>
+            </div>
+        </section>
+    </div>
+</div>
+   <script src="~/js/catalog.js" asp-append-version="true"></script>

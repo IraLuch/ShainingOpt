@@ -23,8 +23,6 @@ namespace ShainingOpt.DataBase
  
         public DbSet<Product> Products { get; set; }
 
-
-        public DbSet<ProductVariant> ProductVariants { get; set; }
         public DbSet<Company> Companies { get; set; }
 
         public DbSet<Role> Roles { get; set; }

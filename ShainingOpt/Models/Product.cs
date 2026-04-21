@@ -37,7 +37,15 @@ namespace ShainingOpt.Models
         [Display(Name = "Дата создания")]
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
-        public ICollection<ProductVariant> Variants { get; set; } = new List<ProductVariant>();
+        [Display(Name = "Цвет")]
+        [Required(ErrorMessage = "Выберите цвет")]
+        public int? ColorId { get; set; }
+
+        public int MinOrderQuantity { get; set; } = 20;
+
+        public int Quantity { get; set; } = 0;
+
+        public Color? Color { get; set; }
 
         public Category? Category { get; set; }
         public Brand? Brand { get; set; }

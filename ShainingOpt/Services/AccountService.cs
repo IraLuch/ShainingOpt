@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using ShainingOpt.DataBase;
+using ShainingOpt.Mappers;
 using ShainingOpt.Models;
 using ShainingOpt.ViewModels;
 using System.Security.Claims;
@@ -37,13 +38,10 @@ namespace ShainingOpt.Services
                 PhoneNumber = model.PhoneNumber
             };
 
-            using var transaction = await _context.Database.BeginTransactionAsync();
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
                 return result;
 
-            try
-            {
                 await _userManager.AddToRoleAsync(user, "Client");
 
                 var company = new Company
@@ -58,15 +56,10 @@ namespace ShainingOpt.Services
 
                 _context.Companies.Add(company);
                 await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
                 return IdentityResult.Success;
 
-            }
-            catch
-            {
-                await transaction.RollbackAsync();
-                return IdentityResult.Failed();
-            }
+                
+            
 
         }
 
@@ -110,46 +103,69 @@ namespace ShainingOpt.Services
             return await _context.Users.Include(c => c.Company).FirstOrDefaultAsync(u => user.Id == u.Id);
         }
 
-        internal async Task<IdentityResult> UpdateUserAndCompanyDataAsync(User user, ProfileViewModel model)
+        internal async Task<IdentityResult> UpdateUserAndCompanyDataAsync(User user, UpdateProfileDataViewModel model)
         {
-       
-            using var transaction = await _context.Database.BeginTransactionAsync();
+
             try
             {
-                user.Email = model.Email;
-                user.PhoneNumber = model.Phone;
-                                              
-                user.UserName =  model.Email; 
 
-                if (user.Company != null)
-                {
-                    user.Company.CompanyName = model.CompanyName;
-                    user.Company.Inn = model.Inn;
-                    user.Company.Kpp = model.Kpp;
-                    user.Company.LegalAddress = model.Address;
-                    user.Company.ContactPerson =model.ContactPerson;
-                }
+                ProfileMapper.UpdateUser(user, model);
+                ProfileMapper.UpdateCompany(user, model);
 
-                var res = await _userManager.UpdateAsync(user);
-                if (res.Succeeded)
-                {
-                    await transaction.CommitAsync();
-                    return IdentityResult.Success;
-                }
-                await transaction.RollbackAsync();
-                return IdentityResult.Failed();
+                var result = await _userManager.UpdateAsync(user);
+
+                return result;
             }
-            catch
+            catch 
             {
-                await transaction.RollbackAsync();
                 return IdentityResult.Failed();
             }
         }
 
-        internal async Task<IdentityResult> UpdateSecurityData(User user, ProfileViewModel model)
+        internal async Task<IdentityResult> UpdateSecurityData(User user, UpdateSecurityDataViewModel model)
         {
             var res = await _userManager.ChangePasswordAsync(user, model.Password, model.NewPassword) ;
             return res;
+        }
+
+        internal async Task<ProfileViewModel> BuildProfileViewModelAsync(User user, UpdateProfileDataViewModel model = null)
+        {
+            var company = await _context.Companies.FirstOrDefaultAsync(u => u.User.Id == user.Id);
+            if (model != null)
+            {
+                return new ProfileViewModel
+                {
+                    Id = company.CompanyId,
+                    CompanyName = model.CompanyName,
+                    ContactPerson = model.ContactPerson,
+                    Email = model.Email,
+                    Phone = model.Phone,
+                    Inn = model.Inn,
+                    Kpp = model.Kpp,
+                    Address = model.Address
+                };
+            }
+            return new ProfileViewModel
+            {
+                Id = company.CompanyId,
+                CompanyName = company.CompanyName,
+                ContactPerson = company.ContactPerson,
+                Email = user.Email,
+                Phone = user.PhoneNumber,
+                Inn = company.Inn,
+                Kpp = company.Kpp,
+                Address = company.LegalAddress,
+
+                // Пароли НЕ заполняем — они не должны отображаться
+                Password = "",
+                NewPassword = "",
+                ConfirmPassword = ""
+            };
+        }
+
+        internal async Task Logout()
+        {
+           await _signInManager.SignOutAsync();
         }
     } }
 

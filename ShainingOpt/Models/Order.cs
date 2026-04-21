@@ -37,6 +37,8 @@ namespace ShainingOpt.Models
 
         public Company? Company { get; set; }
         public User? User { get; set; }
+
+        public List<OrderItem> OrderItems { get; set; } = new();
     }
 
     public enum OrderStatus

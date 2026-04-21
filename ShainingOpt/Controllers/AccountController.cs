@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using ShainingOpt.Mappers;
 using ShainingOpt.Models;
 using ShainingOpt.Services;
 using ShainingOpt.ViewModels;
@@ -50,6 +51,65 @@ namespace ShainingOpt.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> UpdateProfileData(UpdateProfileDataViewModel model)
+        {
+            var user = await _accountService.GetCurrentUserAsync(User);
+            if (user is null)
+            {
+                return RedirectToAction("Register", "Account"); // страница ошибки
+            }
+            var profileModel = ProfileMapper.FromUpdateModel(model, user);
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(e => e.Errors).Select(e => e.ErrorMessage).ToList();
+
+                foreach (var er in errors)
+                {
+                    ModelState.AddModelError("ProfileError", er);
+                }
+                return View("Profile", profileModel);
+            }
+            var res = await _accountService.UpdateUserAndCompanyDataAsync(user, model);
+            if (!res.Succeeded)
+            {
+                ModelState.AddModelError("ProfileError", "Что-то пошло не так. Попробуйте еще раз");
+
+            }
+            return View("Profile", profileModel);
+        }
+
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> UpdateSecurityDate(UpdateSecurityDataViewModel model)
+        {
+            var user = await _accountService.GetCurrentUserAsync(User);
+            if (user is null)
+            {
+                return RedirectToAction("Register", "Account"); // страница ошибки
+            }
+            var profileModel = ProfileMapper.ToViewModel(user);
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(e => e.Errors).Select(e => e.ErrorMessage).ToList();
+
+                foreach (var er in errors)
+                {
+                    ModelState.AddModelError("SecurityError", er);
+                }
+                return View("Profile", profileModel);
+            }
+            var res = await _accountService.UpdateSecurityData(user, model);
+            if (!res.Succeeded)
+            {
+                ModelState.AddModelError("SecurityError", "Что-то пошло не так. Попробуйте еще раз");
+
+            }
+            return View("Profile", profileModel);
+        }
+
         //[HttpPost]
         //[Authorize]
         //public async Task<IActionResult> Profile(ProfileViewModel model, string action)
@@ -67,12 +127,12 @@ namespace ShainingOpt.Controllers
 
         //        if (ModelState.IsValid)
         //        {
-                    
+
         //            var res = await _accountService.UpdateUserAndCompanyDataAsync(user, model);
         //            if (!res.Succeeded)
         //            {
         //                ModelState.AddModelError("", "Что-то пошло не так. Попробуйте еще раз");
-                     
+
         //            }
         //        }
 
@@ -87,7 +147,7 @@ namespace ShainingOpt.Controllers
         //        if (!res.Succeeded)
         //        {
         //            ModelState.AddModelError("", "Что-то пошло не так. Попробуйте еще раз");
-                
+
         //        }
         //    }
         //    return View(model);
@@ -209,6 +269,12 @@ namespace ShainingOpt.Controllers
             return RedirectToAction("Index", "Home");
 
 
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await _accountService.Logout();
+            return RedirectToAction("Index", "Home");
         }
 
     }
