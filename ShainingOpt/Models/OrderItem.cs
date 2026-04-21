@@ -26,6 +26,6 @@ namespace ShainingOpt.Models
         public decimal TotalPrice { get; set; }
 
         public Order? Order { get; set; }
-        public ProductVariant? Variant { get; set; }
+    
     }
 }

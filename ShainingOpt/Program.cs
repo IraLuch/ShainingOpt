@@ -48,6 +48,7 @@ builder.Services.AddIdentity<User, Role>(options =>
 .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<CatalogService>();
 builder.Services.AddScoped<EmailService>();
 
 builder.Services.ConfigureApplicationCookie(options =>

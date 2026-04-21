@@ -1,4 +1,5 @@
-@model List<Product>
+@using ShainingOpt.ViewModels
+@model CatalogViewModel
 
 @{
     Layout = "_Layout";
@@ -8,69 +9,86 @@
     <div class="catalog__container container">
         <section class="filters">
             <div class="filters__container container">
-                <form class="filter__groups">
+                <form class="filter__groups" method="get" asp-action="Catalog" asp-controller="Catalog">
                     <div class="filter__group">
                         <div class="filter__title">Категория</div>
                         <ul class="filter__items">
-                            <li class="filter__item"><input type="checkbox">Одежда</li>
-                            <li class="filter__item"><input type="checkbox">Брюки</li>
-                        </ul>
+                            @foreach(var item in Model.Categories)
+                                {
+                                <li class="filter__item"><input name="categories"
+                                    @(Model.SelectedCategories.Contains(item.CategoryId) ? "checked" : "")
+                                    value="@item.CategoryId" type="checkbox">@item.CategoryName</li>
+                                }
+                            </ul>
                     </div>
                     <div class="filter__group">
                         <div class="filter__title">Бренд</div>
                         <ul class="filter__items">
-                            <li class="filter__item"><input type="checkbox">авыа</li>
-                            <li class="filter__item"><input type="checkbox">авыаы</li>
+                            @foreach (var item in Model.Brands)
+                            {
+                                <li class="filter__item"><input name="brands" 
+                                    @(Model.SelectedBrands.Contains(item.BrandId) ? "checked" : "")
+                                    value="@item.BrandId" type="checkbox">@item.BrandName</li>
+                            }
                         </ul>
                     </div>
                     <div class="filter__group">
                         <div class="filter__title">Цвет</div>
                         <ul class="filter__items">
-                            <li class="filter__item"><input type="checkbox">авыа</li>
-                            <li class="filter__item"><input type="checkbox">авыаы</li>
+                            @foreach (var item in Model.Colors)
+                            {
+                                <li class="filter__item"><input name="colors" 
+                                    @(Model.SelectedColors.Contains(item.ColorId) ? "checked" : "")
+                                    value="@item.ColorId" type="checkbox">@item.ColorName</li>
+                            }
                         </ul>
                     </div>
                     <div class="filter__group">
                         <div class="filter__title">Размер</div>
                         <ul class="filter__items">
-                            <li class="filter__item"><input type="checkbox">авыа</li>
-                            <li class="filter__item"><input type="checkbox">авыаы</li>
-                            <li class="filter__item"><input type="checkbox">авыа</li>
-                            <li class="filter__item"><input type="checkbox">авыаы</li>
-                            <li class="filter__item"><input type="checkbox">авыа</li>
-                            <li class="filter__item"><input type="checkbox">авыаы</li>
-                            <li class="filter__item"><input type="checkbox">авыа</li>
-                            <li class="filter__item"><input type="checkbox">авыаы</li>
+                            @foreach (var item in Model.Sizes)
+                            {
+                                <li class="filter__item"><input name="sizes"
+                                    @(Model.SelectedSizes.Contains(item.SizeId) ? "checked" : "")
+                                    value="@item.SizeId" type="checkbox">@item.SizeName</li>
+                            }
                         </ul>
                     </div>
                     <div class="filter__group">
                         <div class="filter__title">Цена</div>
                         <ul class="filter__items">
-                            <li><input class="filter__price" type="number" name="minPrice" placeholder="От"></li>
-                            <li><input class="filter__price" type="number" name="maxPrice" placeholder="До"></li>
+                            <li><input class="filter__price" type="number" name="minPrice" value="@Model.MinPrice"  placeholder="От"></li>
+                            <li><input class="filter__price" type="number" name="maxPrice" value="@Model.MaxPrice" placeholder="До"></li>
                         </ul>
                     </div>
-                </form>
                 <button class="btn btn--white filters__btn">Применить</button>
+                </form>
             </div>
         </section>
         <section class="cards">
             <div class="cards__container container">
                 <ul class="cards__grid">
+
+                        @foreach (var item in Model.Products)
+                    {
                     <li class="card">
-                        <div class="card__img">
-                            <img src="" alt="">
-                        </div>
-                        <form class="card__info">
-                            <div class="card__name">Boxy Wool Jacket</div>
-                            <div class="card__price">23 323P</div>
+                        <a class="card__info">
+                            <div class="card__img">
+                                <img src="@item.MainImageUrl" alt="@item.ProductName" loading="lazy">
+                            </div>
+                                <div class="card__name">@item.ProductName</div>
+                                <div class="card__price">@item.WholesalePrice P</div>
+                        </a>
+                        <form >
                             <button class="card__btn btn">В корзину</button>
                         </form>
                     </li>
-                   
+                        
+                    }
+
                 </ul>
             </div>
         </section>
     </div>
 </div>
-   <script src="~/js/catalog.js" asp-append-version="true"></script>
+<script src="~/js/catalog.js" asp-append-version="true"></script>

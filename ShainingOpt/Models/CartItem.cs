@@ -21,6 +21,6 @@ namespace ShainingOpt.Models
         public int Quantity { get; set; }
 
         public Cart? Cart { get; set; }
-        public ProductVariant? Variant { get; set; }
+  
     }
 }

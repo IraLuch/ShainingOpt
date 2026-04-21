@@ -11,7 +11,7 @@ namespace ShainingOpt.Models
         [Display(Name = "Цвет")]
         public required string ColorName { get; set; }
 
-        public ICollection<ProductVariant>? Variants { get; set; } = new List<ProductVariant>();
+
 
     }
 }

@@ -11,6 +11,5 @@ namespace ShainingOpt.Models
         [Display(Name = "Размер")]
         public  string SizeName { get; set; }
 
-        public ICollection<ProductVariant>? Variants { get; set; } = new List<ProductVariant>();
     }
 }
