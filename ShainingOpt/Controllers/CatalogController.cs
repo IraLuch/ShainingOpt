@@ -20,11 +20,15 @@ namespace ShainingOpt.Controllers
     List<int> colors,
     List<int> sizes,
     int? minPrice,
-    int? maxPrice)
+    int? maxPrice,
+    int pageSize = 15,
+    int pageNumber = 1)
+
         {
-            var products = await _catalogService.GetProducts(); //условия
-            
-            if( categories != null && categories.Any())
+            var products = await _catalogService.GetProducts(); 
+
+
+            if ( categories != null && categories.Any())
                 products = products.Where(p => categories.Contains(p.CategoryId)).ToList();
 
             if (brands != null && brands.Any())
@@ -42,6 +46,13 @@ namespace ShainingOpt.Controllers
             if (maxPrice != null)
                 products = products.Where(p => p.WholesalePrice <= maxPrice).ToList();
 
+            int totalPages = (int)Math.Ceiling(products.Count / (double)pageSize);
+
+            products = products.Skip(pageNumber - 1).Take(pageSize).ToList();
+
+            var start = Math.Max(1, pageNumber - 2);
+            var end = Math.Min(pageNumber + 2, totalPages);
+
             var model = new CatalogViewModel
             {
                 Products = products,
@@ -56,7 +67,12 @@ namespace ShainingOpt.Controllers
                 SelectedSizes = sizes,
 
                 MinPrice = minPrice,
-                MaxPrice = maxPrice
+                MaxPrice = maxPrice,
+
+                TotalPage = totalPages,
+                CurrentPage = pageNumber,
+                PageStart = start,
+                PageEnd = end
             };
             return View(model);
         }

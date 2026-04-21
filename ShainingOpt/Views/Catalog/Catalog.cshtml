@@ -90,5 +90,45 @@
             </div>
         </section>
     </div>
+    <section class="pagination">
+        <ul class="pagination__container container">
+            @for (int i = Model.PageStart; i < Model.CurrentPage; i++)
+            {
+                <li class="pagination__item @(i == Model.CurrentPage ? "pagination__item--active" : "")">
+
+                    <a asp-action="Catalog" asp-controller="Catalog"
+                           asp-route-pageNumber="@i"
+                           asp-route-categories="@string.Join(",", Model.SelectedCategories)"
+                           asp-route-brands="@string.Join(",", Model.SelectedBrands)"
+                           asp-route-colors="@string.Join(",", Model.SelectedColors)"
+                           asp-route-sizes="@string.Join(",", Model.SelectedSizes)"
+                           asp-route-minPrice="@Model.MinPrice"
+                           asp-route-maxPrice="@Model.MaxPrice">
+                        @i
+                       
+                    </a>
+                </li>
+            }
+
+            @for (int i = Model.CurrentPage; i <= Model.PageEnd; i++)
+            {
+                <li class="pagination__item @(i == Model.CurrentPage ? "pagination__item--active" : "")">
+
+                    <a asp-action="Catalog" asp-controller="Catalog" 
+                       asp-route-pageNumber="@i"
+                           asp-route-categories="@string.Join(",", Model.SelectedCategories)"
+                           asp-route-brands="@string.Join(",", Model.SelectedBrands)"
+                           asp-route-colors="@string.Join(",", Model.SelectedColors)"
+                           asp-route-sizes="@string.Join(",", Model.SelectedSizes)"
+                           asp-route-minPrice="@Model.MinPrice"
+                           asp-route-maxPrice="@Model.MaxPrice">
+                        @i
+                       
+                   </a>
+                    </li>
+            }
+           
+        </ul>
+    </section>
 </div>
 <script src="~/js/catalog.js" asp-append-version="true"></script>

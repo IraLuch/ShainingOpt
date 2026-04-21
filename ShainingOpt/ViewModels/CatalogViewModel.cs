@@ -22,6 +22,10 @@ namespace ShainingOpt.ViewModels
         public int? MinPrice { get; set; }
         public int? MaxPrice { get; set; }
 
+        public int TotalPage {  get; set; }
+        public int CurrentPage {  get; set; }
+         public int PageStart { get; set; }
+        public int PageEnd { get; set; }
 
     }
 }
