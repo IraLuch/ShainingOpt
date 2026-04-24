@@ -110,48 +110,6 @@ namespace ShainingOpt.Controllers
             return View("Profile", profileModel);
         }
 
-        //[HttpPost]
-        //[Authorize]
-        //public async Task<IActionResult> Profile(ProfileViewModel model, string action)
-        //{
-        //    var user = await _accountService.GetCurrentUserAsync(User);
-        //    if (user is null)
-        //    {
-        //        return RedirectToAction("Register", "Account");
-        //    }
-        //    if (action == "companyData")
-        //    {
-        //        ModelState.Remove("Password");
-        //        ModelState.Remove("NewPassword");
-        //        ModelState.Remove("ConfirmPassword");
-
-        //        if (ModelState.IsValid)
-        //        {
-
-        //            var res = await _accountService.UpdateUserAndCompanyDataAsync(user, model);
-        //            if (!res.Succeeded)
-        //            {
-        //                ModelState.AddModelError("", "Что-то пошло не так. Попробуйте еще раз");
-
-        //            }
-        //        }
-
-        //    }
-        //    if (action == "securityData")
-        //    {
-        //        if (string.IsNullOrEmpty(model.Password) || string.IsNullOrEmpty(model.NewPassword) || string.IsNullOrEmpty(model.ConfirmPassword))
-        //        {
-        //            ModelState.AddModelError("", "Для смены пароля заполните все поля");
-        //        }
-        //        var res = await _accountService.UpdateSecurityData(user, model);
-        //        if (!res.Succeeded)
-        //        {
-        //            ModelState.AddModelError("", "Что-то пошло не так. Попробуйте еще раз");
-
-        //        }
-        //    }
-        //    return View(model);
-        //}
         [HttpGet]
         public IActionResult Register()
         {

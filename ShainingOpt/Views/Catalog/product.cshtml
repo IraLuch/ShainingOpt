@@ -1,0 +1,87 @@
+@using ShainingOpt.ViewModels
+@model ProductViewModel
+@{
+    Layout = "_Layout";
+}
+<link rel="stylesheet" href="~/css/product.css" asp-append-version="true"/>
+
+<section class="product">
+    <div class="product__container container">
+        <div class="product__content"> 
+            @* //form *@
+
+            <div class="product__image">
+                <img src="@Model.SelectedVariant.ImageUrl" alt="">
+            </div>
+
+            <div class="product__info">
+                <h1 class="product__title">@Model.ProductName</h1>
+                <span class="product__price">@Model.WholesalePrice P</span>
+                <span class="product__brand product__desc">@Model.Brand</span>
+
+                <div class="product__variants">
+                    <span class="product__variants-title  product__desc">Выберите цвет</span>
+                    <form class="product__variants-items" asp-action="Product" asp-controller="Catalog" method="get">
+                            <input type="hidden" name="productId" value="@Model.ProductId" />
+                        @foreach (var color in Model.Variants.GroupBy(c => c.ColorId)
+                        .Select(q => q.First()))
+                            {
+                            <button type="submit" name="variantId" 
+                                    value="@color.ProductVariantId" class="product__variant
+                                @(Model.SelectedVariant.ColorId == color.ColorId ? "product__variant--active": "")">
+                            <span class="product__variant-btn" >@color.ColorName</span>
+                         </button>
+                                
+                            }
+                       
+                    </form>
+                </div>
+
+                <div class="product__variants">
+                    <span class="product__variants-title  product__desc">Выберите размер</span>
+                    <div class="product__variants-items">
+                    @foreach (var size in Model.Variants
+                        .Where(v => v.ColorId == Model.SelectedVariant.ColorId))
+                            {
+                                
+                            <button type="button" data-size-id="@size.SizeId" data-action="size"
+                                class="product__variant @(Model.SelectedVariant.SizeId == size.SizeId? "product__variant--active" : "")  
+                       ">
+                            <span class="product__variant-btn">@size.SizeName</span>
+                        </button>
+                                
+                            }                       
+                    </div>
+                </div>
+                <div class="product__condition">
+                    <span class="product__condition-title">Условия поставки</span>
+                    <p class="product__condition-info">
+                        Минимальная партия для заказа: @Model.SelectedVariant.MinOrderQuantity единиц/ы. Срок отгрузки:
+                        1-3 рабочих дня.
+                    </p>
+                </div>
+
+                <div class="product__quantity">
+                    <button class="product__quantity-btn" data-action="minus">-</button>
+                    <span class="product__quantity-value" max="@Model.SelectedVariant.Quantity" min="@Model.SelectedVariant.MinOrderQuantity">@Model.SelectedVariant.MinOrderQuantity</span>
+                    <button class="product__quantity-btn" data-action="plus">+</button>
+                </div>
+
+                <button class="product__btn btn">Добавить в корзину</button>
+
+                <div class="product__description">
+                    <h2 class="product__description-title">Описание модели</h2>
+                    <p class="product__description-text">
+                       @Model.Description
+                    </p>
+                </div>
+            </div>
+
+            @* //form *@
+        </div>
+    </div>
+</section>
+<script>
+    window.productData  = @Html.Raw(Json.Serialize(Model));
+</script>
+<script src="~/js/product.js" asp-append-version="true"></script>

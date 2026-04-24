@@ -8,8 +8,8 @@
 <div class="catalog">
     <div class="catalog__container container">
         <section class="filters">
-            <div class="filters__container container">
-                <form class="filter__groups" method="get" asp-action="Catalog" asp-controller="Catalog">
+            <form method="get" asp-action="Catalog" asp-controller="Catalog" class="filters__container container">
+                <div class="filter__groups" >
                     <div class="filter__group">
                         <div class="filter__title">Категория</div>
                         <ul class="filter__items">
@@ -62,31 +62,40 @@
                         </ul>
                     </div>
                 <button class="btn btn--white filters__btn">Применить</button>
-                </form>
-            </div>
+                </div>
+            </form>
         </section>
         <section class="cards">
             <div class="cards__container container">
+                        @if (!Model.Products.Any())
+                    {
+                        <div class="empty cards__empty">
+                            <p class="empty__info">
+                                К сожалению по вашему запросу ничего не найдено:(
+                            </p>
+                        </div>
+                    }
+                    else
+                    {
+                        
                 <ul class="cards__grid">
-
-                        @foreach (var item in Model.Products)
+                    @foreach (var item in Model.Products)
                     {
                     <li class="card">
-                        <a class="card__info">
+                        <a class="card__info" asp-action="Product" asp-controller="Catalog" asp-route-productId="@item.ProductId">
                             <div class="card__img">
                                 <img src="@item.MainImageUrl" alt="@item.ProductName" loading="lazy">
                             </div>
                                 <div class="card__name">@item.ProductName</div>
                                 <div class="card__price">@item.WholesalePrice P</div>
                         </a>
-                        <form >
-                            <button class="card__btn btn">В корзину</button>
-                        </form>
+                            <a asp-action="Product" asp-controller="Catalog" asp-route-productId="@item.ProductId" class="card__btn btn">Подробнее</a>
                     </li>
                         
                     }
 
                 </ul>
+                    }
             </div>
         </section>
     </div>

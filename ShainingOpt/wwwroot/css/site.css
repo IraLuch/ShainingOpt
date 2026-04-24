@@ -268,3 +268,10 @@ body {
     margin-bottom: 15px;
     display:flex;
 }
+.empty {
+}
+
+.empty__info {
+    font-size: 20px;
+    text-align: center;
+}

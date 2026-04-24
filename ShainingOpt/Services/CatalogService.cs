@@ -39,9 +39,27 @@ namespace ShainingOpt.Services
         {
            return await _context.Products.Where(p => p.IsActive).Include(p => p.Category)
                 .Include(p => p.Brand)
-                .Include(p => p.Color)
-                .Include(p => p.Size)
+                .Include (p => p.Category)
+                .Include(p => p.ProductVariants)
                 .ToListAsync();
+        }
+
+        internal async Task<Product> GetProductWithVariants(int productId)
+        {
+            return await _context.Products.
+                Include(v => v.ProductVariants).ThenInclude(c => c.Color)
+                .Include(v => v.ProductVariants).ThenInclude(s => s.Size).
+                Include(b => b.Brand).FirstOrDefaultAsync(p => productId == p.ProductId);
+        }
+
+        internal async Task<ProductVariant> GetDefaultVariant(int productId)
+        {
+            return await _context.ProductVariants.Include(c => c.Color).Include(s => s.Size).FirstOrDefaultAsync(p => p.ProductId == productId);
+        }
+
+        internal async Task<ProductVariant> GetProductVariant(int? variantId)
+        {
+            return await _context.ProductVariants.Include(c => c.Color).Include(s => s.Size).FirstOrDefaultAsync(v => variantId == v.ProductVariantId);
         }
     }
 }

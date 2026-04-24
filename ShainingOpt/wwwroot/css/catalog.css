@@ -120,9 +120,10 @@
 .card {
 }
 
-    .card:hover img {
-        border: 1px solid black;
-    }
+
+.card:hover img {
+    border: 1px solid black;
+}
 
     .card:hover .card__btn {
         opacity: 1;
@@ -154,9 +155,11 @@
 }
 
 .card__btn {
+    display:block;
     opacity: 0;
     width: 100%;
     margin-top: 20px;
+    text-align:center;
 }
 
 .btn {

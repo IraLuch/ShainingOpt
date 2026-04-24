@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ShainingOpt.Models;
 using ShainingOpt.Services;
 using ShainingOpt.ViewModels;
 
@@ -24,6 +25,7 @@ namespace ShainingOpt.Controllers
     int pageSize = 15,
     int pageNumber = 1)
 
+        
         {
             var products = await _catalogService.GetProducts(); 
 
@@ -35,10 +37,10 @@ namespace ShainingOpt.Controllers
                 products = products.Where(p => brands.Contains(p.BrandId)).ToList();
 
             if (colors != null && colors.Any())
-                products = products.Where(p => colors.Contains(p.ColorId)).ToList();
+                products = products.Where(p => p.ProductVariants.Any(c => colors.Contains(c.ColorId))).ToList();
 
             if (sizes != null && sizes.Any())
-                products = products.Where(p => sizes.Contains(p.SizeId)).ToList();
+                products = products.Where(p => p.ProductVariants.Any(c => sizes.Contains(c.SizeId))).ToList();
 
             if (minPrice != null)
                 products = products.Where(p => p.WholesalePrice >= minPrice).ToList();
@@ -73,6 +75,56 @@ namespace ShainingOpt.Controllers
                 CurrentPage = pageNumber,
                 PageStart = start,
                 PageEnd = end
+            };
+            return View(model);
+        }
+
+        public async Task<IActionResult> Product(int productId, int? variantId)
+        {
+            var product = await _catalogService.GetProductWithVariants(productId);
+            if (product == null)
+            {
+                return View("Index"); //страница ошибки
+            }
+
+            var variant = variantId == null ?
+                await _catalogService.GetDefaultVariant(productId) :
+                await _catalogService.GetProductVariant(variantId);
+
+            if (variant == null)
+            {
+                return View("Index"); //страницв ошибки
+            }
+
+            var model = new ProductViewModel
+            {
+                ProductId = productId,   
+                WholesalePrice = product.WholesalePrice,
+                Brand = product.Brand.BrandName,
+                ProductName = product.ProductName,
+                Description = product.Description,
+                SelectedVariant = new VariantDto
+                {
+                    ProductVariantId = variant.ProductVariantId,
+                    ColorId = variant.ColorId,
+                    ColorName = variant.Color.ColorName,
+                    SizeName = variant.Size.SizeName,
+                    SizeId = variant.SizeId,
+                    ImageUrl = variant.ImageUrl,
+                    Quantity = variant.Quantity,
+                    MinOrderQuantity= variant.MinOrderQuantity,
+                },
+                Variants = product.ProductVariants.Select(v => new VariantDto
+                {
+                    ProductVariantId = v.ProductVariantId,
+                    ColorId = v.ColorId,
+                    SizeId = v.SizeId,
+                    ColorName = v.Color.ColorName,
+                    SizeName = v.Size.SizeName,
+                    ImageUrl = v.ImageUrl,
+                    Quantity = v.Quantity,
+                    MinOrderQuantity = v.MinOrderQuantity
+                }).ToList()
             };
             return View(model);
         }
