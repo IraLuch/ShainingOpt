@@ -28,7 +28,7 @@ document.querySelector('#loginForm').addEventListener('submit', async (e) => {
         window.location.href = '/Account/Profile';
     }
     else {
-        const erElem = document.querySelector('.form__error')
+        const erElem = document.querySelector('.error')
         erElem.innerText = result.message;
         erElem.style.display = "block";
     }

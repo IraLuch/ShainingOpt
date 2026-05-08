@@ -1,0 +1,82 @@
+@using ShainingOpt.ViewModels
+@model OrderViewModel
+@{
+    Layout = "_Layout";
+}
+<link rel="stylesheet" href="~/css/order.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/cart_item.css" asp-append-version="true"/>
+<section class="order">
+    <div class="order__container container">
+        <h1 class="order__title">Ваши заказы</h1>
+            @if (Model.Orders.Count == 0 || Model.Orders == null)
+            {
+            <p class="empty__info">Вы еще не совершали заказов!</p>
+            }
+            else{
+
+        <ul class="orders">
+            @foreach(var order in Model.Orders)
+            {
+                    <li class="order__item">
+                <div class="order__item-header">
+                    <div class="order__desc">
+                        <div class="order__number">@order.OrderNumber</div>
+                        <div class="order__date">@order.CreatedDate</div>
+                        <div class="order__addres">@order.DeliveryAddress</div>
+                    </div>
+                    <div class="order__imgs">
+                            @foreach (var item in order.OrderItems)
+                            {
+                                <div class="order__img">
+                                    <img src="@item.Variant.ImageUrl" alt="@item.Variant.Product.ProductName">
+                                </div>
+                            }
+                    </div>
+                    <div class="order__info">
+                        <div class="order__price">@order.TotalAmount Р</div>
+                        <div class="order__status">Сборка</div>
+                    </div>
+                    <button class="order__item-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19.9201 8.94995L13.4001 15.47C12.6301 16.24 11.3701 16.24 10.6001 15.47L4.08008 8.94995" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="order__item-body">
+                    <div class="cart__items">
+                                @foreach( var item in order.OrderItems)
+                            {
+                                
+                            <div class="cart__item">
+                            <div class="cart__item-img">
+                                <img src="@item.Variant.ImageUrl" alt="">
+                            </div>
+                            <div class="cart__item-info">
+                                <div class="cart__item-block">
+                                    <div class="cart__item-name">
+                                        @item.Variant.Product.ProductName
+                                    </div>
+                                    <div class="cart__item-price">@item.Variant.Product.WholesalePrice Р</div>
+                                </div>
+                                <div class="cart__item-desc">
+                                    <span>Размер: @item.Variant.Size.SizeName</span>
+                                    <span>Цвет: @item.Variant.Color.ColorName</span>
+                                    <span>Количество: @item.Quantity</span>
+                                </div>
+
+                            </div>
+                        </div>
+                            }
+                    
+                    </div>
+                </div>
+            </li>
+                    
+                
+            }
+             </ul>
+            }
+    </div>
+</section>
+
+<script src="~/js/order.js" asp-append-version="true"></script>

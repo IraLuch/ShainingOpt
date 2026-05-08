@@ -1,16 +1,23 @@
-using ShainingOpt.Services;
+using Microsoft.AspNetCore.HostFiltering;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShainingOpt.DataBase;
 using ShainingOpt.Models;
+using ShainingOpt.Services;
 using ShainingOpt.ViewModels;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.WebHost.UseUrls("http://localhost:5212");
+
+
+
 // Add services to the container.
 builder.Services.AddControllersWithViews( options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -48,8 +55,14 @@ builder.Services.AddIdentity<User, Role>(options =>
 .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<AccountService>();
+
+builder.Services.Configure<YooKassaSettings>(
+    builder.Configuration.GetSection("YooKassa"));
+builder.Services.AddScoped<PaymentService>();
 builder.Services.AddScoped<CatalogService>();
+builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<EmailService>();
+
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -59,6 +72,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -91,7 +105,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")

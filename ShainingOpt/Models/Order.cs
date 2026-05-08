@@ -22,7 +22,7 @@ namespace ShainingOpt.Models
 
         [Display(Name = "Статус")]
         [Required(ErrorMessage = "Выберите статус")]
-        public OrderStatus orderStatus { get; set; } = OrderStatus.Created;
+        public OrderStatus OrderStatus { get; set; } = OrderStatus.Created;
 
         [Display(Name = "Сумма")]
         [Range(0.01, 999999, ErrorMessage = "Сумма должна быть больше 0")]

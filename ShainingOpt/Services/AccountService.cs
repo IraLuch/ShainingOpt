@@ -100,6 +100,10 @@ namespace ShainingOpt.Services
         public async Task<User?> GetCurrentUserAsync(ClaimsPrincipal claimsPrincipal)
         {
             var user = await _userManager.GetUserAsync(claimsPrincipal);
+            if (user == null)
+            {
+                return null;
+            }
             return await _context.Users.Include(c => c.Company).FirstOrDefaultAsync(u => user.Id == u.Id);
         }
 
@@ -156,7 +160,7 @@ namespace ShainingOpt.Services
                 Kpp = company.Kpp,
                 Address = company.LegalAddress,
 
-                // Пароли НЕ заполняем — они не должны отображаться
+
                 Password = "",
                 NewPassword = "",
                 ConfirmPassword = ""

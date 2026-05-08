@@ -1,0 +1,16 @@
+﻿using ShainingOpt.Models;
+
+namespace ShainingOpt.ViewModels
+{
+    public class CartViewModel
+    {
+        public List<CartItem> CartItems { get; set; } = new List<CartItem>();
+
+        public decimal TotalSum => CartItems.Sum(x => x.Quantity * x.ProductVariant.Product.WholesalePrice);
+
+        public int CartItemsCount => CartItems.Count;
+
+        
+
+    }
+}

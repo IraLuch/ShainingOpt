@@ -11,7 +11,7 @@
                     <span class="info__company-id">id - @Model.Id</span>
                 </div>
                 <div class="info__btns">
-                    <a href="" class="info__btn btn">Мои заказы</a>
+                    <a asp-controller="Cart" asp-action="Order" class="info__btn btn">Мои заказы</a>
                     <a asp-controller="Account" asp-action="Logout" class="info__btn btn info__btn--red">Выйти</a>
                 </div>
             </div>
@@ -21,7 +21,7 @@
         <form class="form form__card" method="post" asp-action="UpdateProfileData"
               asp-controller="Account" novalidate>
 
-                <div class="form__error">
+                <div class="error">
             @if (ViewData.ModelState["ProfileError"]?.Errors.Count > 0)
                 {
                     <ul>
@@ -88,7 +88,7 @@
         <section class="security">
             <div class="container security__container">
                  <form class="form form__card" method="post" asp-action="UpdateSecurityDate" asp-controller="Account">   
-      <div class="form__error">
+      <div class="error">
             @if (ViewData.ModelState["SecurityError"]?.Errors.Count > 0)
                 {
                     <ul>

@@ -19,7 +19,7 @@
     <a asp-action="Index" asp-controller="Home"" class="form__title">ShainingOpt</a>
     <form class="form"  method="post" asp-action="Register" asp-controller="Account">
          @Html.AntiForgeryToken()    
-         <div asp-validation-summary="All" class="form__error" ></div>
+         <div asp-validation-summary="All" class="error" ></div>
         <div class=" form__row">
             <div class=" form__field">
                 <label class=" form__label" for="companyName">Название компании</label>

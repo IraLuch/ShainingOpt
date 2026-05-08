@@ -9,11 +9,13 @@ namespace ShainingOpt.Models
 
         [Display(Name = "Заказ")]
         [Required(ErrorMessage ="Введите номер заказа")]
-        public int OrderId { get; set; }
+        public int? OrderId { get; set; }
 
         [Display(Name = "Товар")]
         [Required(ErrorMessage ="Выберите товар")]
         public int VariantId { get; set; }
+
+        public ProductVariant Variant { get; set; }
 
         [Display(Name = "Количество")]
         [Required(ErrorMessage ="Укажите количество")]

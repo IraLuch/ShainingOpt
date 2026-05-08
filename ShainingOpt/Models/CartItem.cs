@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ShainingOpt.Migrations;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ShainingOpt.Models
 {
@@ -9,11 +11,13 @@ namespace ShainingOpt.Models
 
         [Display(Name = "Корзина")]
         [Required(ErrorMessage ="Укажите корзину")]
-        public int CartId { get; set; }
+        public Guid CartId { get; set; }
 
         [Display(Name = "Товар")]
         [Required(ErrorMessage ="Выберите товар")]
-        public int VariantId { get; set; }
+        public int ProductVariantId { get; set; }
+
+        public ProductVariant ProductVariant { get; set; }
 
         [Display(Name = "Количество")]
         [Required(ErrorMessage ="Укажите количество")]
@@ -21,6 +25,8 @@ namespace ShainingOpt.Models
         public int Quantity { get; set; }
 
         public Cart? Cart { get; set; }
+
+   
   
     }
 }

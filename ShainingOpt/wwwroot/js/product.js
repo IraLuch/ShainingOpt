@@ -19,14 +19,15 @@
         count--;
 
     }
-        qntElem.textContent = count;
+    qntElem.textContent = count;
+    document.querySelector('input[name="quantity"]').value = count;
 
-    if (btnElem.dataset.action === 'size') {
-        document.querySelectorAll('[data-action="size"]').forEach((item) => {
-            item.classList.remove('product__variant--active');
-        })
-        btnElem.classList.add('product__variant--active');
-    }
+    //if (btnElem.dataset.action === 'size') {
+    //    document.querySelectorAll('[data-action="size"]').forEach((item) => {
+    //        item.classList.remove('product__variant--active');
+    //    })
+    //    btnElem.classList.add('product__variant--active');
+    //}
 
 
     //if (btnElem.dataset.action === 'color') {
@@ -37,3 +38,17 @@
     //}
 })
 
+document.querySelector("#addToCartForm").addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const quantityValue = document.querySelector(".product__quantity-value");
+    document.querySelector("input[name='quantity']").value = quantityValue.textContent.trim();
+    const formData = new FormData(this);
+    const res = await fetch("/Cart/AddToCart", { method: "POST", body: formData, credentials: "include" });
+    const data = await res.json();
+    if (!data.success) {
+        console.error("Ошибка обновления");
+    }
+   
+}
+
+)

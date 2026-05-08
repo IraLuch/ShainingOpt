@@ -195,7 +195,7 @@ namespace ShainingOpt.Controllers
             {
                 return RedirectToAction("Index", "Home"); //сделать страницу ошибки
             }
-            //var decodeToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+           
             var model = new NewPasswordViewModel() { Email = email, Token = token };
 
             return View(model);

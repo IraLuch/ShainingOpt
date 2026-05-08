@@ -1,0 +1,95 @@
+@using ShainingOpt.ViewModels
+@model CartViewModel
+@{
+    Layout = "_Layout";
+}
+<link rel="stylesheet" href="~/css/cart.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/cart_item.css" asp-append-version="true"/>
+<section class="cart">
+    @Html.AntiForgeryToken()
+    <div class="cart__container container">
+        <h1 class="cart__title">Ваша корзина</h1>
+        <div class="cart__content">
+            <div class="cart__items">
+                @foreach (var item in Model.CartItems)
+                {
+                <div class="cart__item">
+                    <div class="cart__item-img">
+                        <img src="@item.ProductVariant.ImageUrl" alt="@item.ProductVariant.Product.ProductName">
+                    </div>
+                    <div class="cart__item-info">
+                        <div class="cart__item-block">
+                            <div class="cart__item-name">
+                                    @item.ProductVariant.Product.ProductName
+                            </div>
+                                <input type="hidden" name="price" value="@item.ProductVariant.Product.WholesalePrice" class="price" />
+                                <div class="cart__item-price">@item.ProductVariant.Product.WholesalePrice</div>
+                        </div>
+                        <div class="cart__item-dateil ">
+                            <span>Размер: @item.ProductVariant.Size.SizeName</span>
+                                <span>Цвет: @item.ProductVariant.Color.ColorName</span>
+                        </div>
+                        <form class="cart__item-actions" method="post" asp-action="DeleteVsriantFromCart" asp-controller="Cart">
+                            <div class="cart__quantity quantity ">
+                                <button type="button" class="cart__quantity-btn quantity-btn" data-action="minus">-</button>
+                                    <input type="hidden" name="quantity" class="quantity-input" value="@item.Quantity" />
+                                <span class="cart__quantity-value quantity-value"
+                                  max="@item.ProductVariant.Quantity" name="quantity" min="@item.ProductVariant.MinOrderQuantity"
+                                >@item.Quantity
+                                </span>
+                                    <button type="button" class="cart__quantity-btn quantity-btn" data-action="plus">+
+                                    </button>
+                            </div>
+                                <input type="hidden" name="cartItemID" value="@item.CartItemId" class="cart-item-id" />
+                            <input type="hidden" name="variantId" value="@item.ProductVariantId" />
+                            <button type="submit" class="cart__item-action">Удалить</button>
+                        </form>
+                    </div>
+                </div>
+                    
+                }
+         
+            </div>
+            <form method="post" asp-action="CreateOrder" asp-controller="Cart" class="cart__form">
+                <input type="hidden" name="quantity" value="" />
+         
+                <div class="cart__form-title">Оформление</div>
+                <div class="error">
+                    @if (ViewData.ModelState["CartError"]?.Errors.Count > 0)
+                    {
+                        <ul>
+                            @foreach (var error in ViewData.ModelState["CartError"].Errors)
+                            {
+                                <li class="error">@error.ErrorMessage</li>
+                            }
+                        </ul>
+                    
+                    }
+
+                </div>
+                <label class="cart__form-field">
+                    <textarea class="cart__form-input" placeholder="Введите адрес.." name="DeliveryAddress"></textarea>
+                </label>
+                <div class="cart__form-info">
+                    <div class="cart__form-row">
+                        <span>Товары(@Model.CartItemsCount)</span>
+                        <span id="totalSum">@Model.TotalSum</span>
+                    </div>
+                    <div class="cart__form-row">
+                        <span>Доставка</span>
+                        <span>Бесплатно</span>
+                    </div>
+                    <div class="cart__form-row cart__form-total">
+                        <span>Итого:</span>
+                        <span id="sum">@Model.TotalSum</span>
+                    </div>
+                </div>
+                <button type="submit" class="btn form__btn">Подтвердить заказ</button>
+            </form>
+        </div>
+    </div>
+</section>
+<script src="~/js/cart.js" asp-append-version="true"></script>
+<script>
+
+</script>

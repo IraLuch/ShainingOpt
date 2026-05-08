@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShainingOpt.DataBase;
 
@@ -10,9 +11,11 @@ using ShainingOpt.DataBase;
 namespace ShainingOpt.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260429161940_UpdateCart")]
+    partial class UpdateCart
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.5");
@@ -133,9 +136,9 @@ namespace ShainingOpt.Migrations
 
             modelBuilder.Entity("ShainingOpt.Models.Cart", b =>
                 {
-                    b.Property<Guid>("CartId")
+                    b.Property<int>("CartId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("INTEGER");
@@ -154,20 +157,18 @@ namespace ShainingOpt.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid>("CartId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ProductVariantId")
+                    b.Property<int>("CartId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("VariantId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("CartItemId");
 
                     b.HasIndex("CartId");
-
-                    b.HasIndex("ProductVariantId");
 
                     b.ToTable("CartItems");
                 });
@@ -571,15 +572,7 @@ namespace ShainingOpt.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShainingOpt.Models.ProductVariant", "ProductVariant")
-                        .WithMany()
-                        .HasForeignKey("ProductVariantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Cart");
-
-                    b.Navigation("ProductVariant");
                 });
 
             modelBuilder.Entity("ShainingOpt.Models.Company", b =>
