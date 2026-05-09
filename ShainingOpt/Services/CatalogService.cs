@@ -61,5 +61,15 @@ namespace ShainingOpt.Services
         {
             return await _context.ProductVariants.Include(c => c.Color).Include(s => s.Size).FirstOrDefaultAsync(v => variantId == v.ProductVariantId);
         }
+
+        internal async Task<List<Product>> GetProductsWithSearch(string text)
+        {
+            var products = await GetProducts();
+
+            return products.Where(p => p.ProductName.ToLower().Contains(text) ||
+                p.Brand.BrandName.ToLower().Contains(text) ||
+                p.Category.CategoryName.ToLower().Contains(text))
+                .ToList();
+        }
     }
 }

@@ -16,6 +16,7 @@ namespace ShainingOpt.Controllers
       
         private readonly AccountService _accountService;
         private readonly EmailService _emailService;
+        private readonly CartService _cartService;
         public AccountController(AccountService accountService, EmailService emailService)
         {
             _accountService = accountService;
@@ -232,6 +233,10 @@ namespace ShainingOpt.Controllers
         public async Task<IActionResult> Logout()
         {
             await _accountService.Logout();
+            if (Request.Cookies["cartId"] != null)
+            {
+                Response.Cookies.Delete("cartId");
+            }
             return RedirectToAction("Index", "Home");
         }
 

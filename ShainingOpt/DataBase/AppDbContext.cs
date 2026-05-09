@@ -36,5 +36,18 @@ namespace ShainingOpt.DataBase
 
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Product>()
+                .Property(p => p.ProductName)
+                .UseCollation("NOCASE");
+
+            modelBuilder.Entity<Brand>()
+                .Property(b => b.BrandName)
+                .UseCollation("NOCASE");
+        }
     }
 }

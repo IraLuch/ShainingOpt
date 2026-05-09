@@ -38,9 +38,9 @@
 
 
           @*   сделать *@
-            <form class="header__search">
-                <input type="text" class="header__search-input" placeholder="Поиск товаров...">
-                <button type="submit" class="header__search-icon "><img src="~/img/header/search.svg" alt=""></button>
+            <form class="header__search" asp-action="Search" asp-controller="Catalog">
+                <input type="text" name="text" class="header__search-input" placeholder="Поиск товаров...">
+                <button type="submit" class="header__search-icon "><img src="~/img/header/search.svg"></button>
             </form>
 
             <div class="header__actions">

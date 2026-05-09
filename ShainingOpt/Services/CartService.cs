@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Bcpg;
 using ShainingOpt.DataBase;
 using ShainingOpt.Models;
 
@@ -19,9 +20,9 @@ namespace ShainingOpt.Services
             await _context.SaveChangesAsync();
         }
 
-        internal async Task CreateCart(string cartId)
+        internal async Task CreateCart(string cartId, int? userId)
         {
-            var cart = _context.Carts.Add(new Cart { CartId = Guid.Parse(cartId) });
+            var cart = _context.Carts.Add(new Cart { CartId = Guid.Parse(cartId) , UserId = userId});
             await _context.SaveChangesAsync();
         }
 
@@ -32,10 +33,30 @@ namespace ShainingOpt.Services
             await _context.SaveChangesAsync();
         }
 
-        internal async Task<Cart?> GetCartById(string cartId)
+        internal async Task<Cart?> GetCart(string cartId, int? userId = null)
         {
-            
-            return await _context.Carts.FirstOrDefaultAsync(c => c.CartId == Guid.Parse(cartId));
+            var query = _context.Carts
+        .Include(c => c.Items)
+            .ThenInclude(i => i.ProductVariant)
+                .ThenInclude(pv => pv.Product)
+        .Include(c => c.Items)
+            .ThenInclude(i => i.ProductVariant)
+                .ThenInclude(pv => pv.Size)
+        .Include(c => c.Items)
+            .ThenInclude(i => i.ProductVariant)
+                .ThenInclude(pv => pv.Color)
+        .AsQueryable();
+            if ( userId != null)
+            {
+            return await query.FirstOrDefaultAsync(c => c.UserId == userId);
+            }
+           if (cartId != null)
+            {
+
+            return await query.FirstOrDefaultAsync(c => c.CartId == Guid.Parse(cartId));
+            }
+            return null;
+
         }
 
         internal async Task<List<CartItem>> GetCartItems(string cartId)
@@ -53,7 +74,7 @@ namespace ShainingOpt.Services
 
         internal async Task UpdateCartItem(CartItem cartItem, int quantity)
         {
-            cartItem.Quantity += quantity;
+            cartItem.Quantity = quantity;
             await _context.SaveChangesAsync();
         }
 
@@ -123,9 +144,9 @@ namespace ShainingOpt.Services
             await _context.SaveChangesAsync();
         }
 
-        internal async Task CartToUser(string cartId, int userId)
+        internal async Task CartToUser(string cartId, int? userId)
         {
-            var cart = await GetCartById(cartId);
+            var cart = await GetCart(cartId);
             cart.UserId = userId;
             await _context.SaveChangesAsync();
         }
@@ -150,6 +171,54 @@ namespace ShainingOpt.Services
             .ThenInclude(oi => oi.Variant)
                 .ThenInclude(v => v.Color)
                 .Where(o => o.UserId == id).ToListAsync();
+        }
+
+        internal async Task<Cart> GetCartByUser(int id)
+        {
+            return await _context.Carts.Include(o => o.User).Include(o => o.Items).FirstOrDefaultAsync(c => c.UserId == id);
+        }
+
+        public async Task AddItemToCartAsync(string cartIdString, int? userId, int variantId, int quantity)
+        {
+            if (!Guid.TryParse(cartIdString, out Guid cartId)) return;
+
+            // 1. Получаем корзину со всеми связями
+            var cart = await _context.Carts
+                .Include(c => c.Items)
+                .ThenInclude(i => i.ProductVariant)
+                .FirstOrDefaultAsync(c => c.CartId == cartId);
+
+            // 2. Если корзины нет — создаем
+            if (cart == null)
+            {
+                cart = new Cart { CartId = cartId, UserId = userId };
+                _context.Carts.Add(cart);
+            }
+            else if (cart.UserId == null && userId != null)
+            {
+                cart.UserId = userId; // Привязываем анонимную корзину к юзеру
+            }
+
+            // 3. Работаем с товаром
+            var cartItem = cart.Items.FirstOrDefault(i => i.ProductVariantId == variantId);
+
+            if (cartItem != null)
+            {
+                // Логика ограничения по остаткам
+                int totalRequested = cartItem.Quantity + quantity;
+                cartItem.Quantity = Math.Min(totalRequested, cartItem.ProductVariant.Quantity);
+            }
+            else
+            {
+                // Добавляем новый
+                cart.Items.Add(new CartItem
+                {
+                    ProductVariantId = variantId,
+                    Quantity = quantity
+                });
+            }
+
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -2,6 +2,8 @@
 using ShainingOpt.Models;
 using ShainingOpt.Services;
 using ShainingOpt.ViewModels;
+using System.Drawing;
+using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 
 namespace ShainingOpt.Controllers
 {
@@ -12,6 +14,43 @@ namespace ShainingOpt.Controllers
         public CatalogController(CatalogService catalogService)
         {
              _catalogService = catalogService;   
+        }
+
+        private async Task<CatalogViewModel> BuildCatalogModelAsync(List<Product> products,
+            List<int>? categories = null,
+    List<int>? brands = null,
+    List<int>? colors = null,
+    List<int>? sizes = null,
+    int? minPrice = null,
+    int? maxPrice = null,
+    int pageSize = 15,
+    int pageNumber = 1)
+        {
+            int totalPages = (int)Math.Ceiling(products.Count / (double)pageSize);
+            products = products.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            var start = Math.Max(1, pageNumber - 2);
+            var end = Math.Min(pageNumber + 2, totalPages);
+
+            return new CatalogViewModel{
+                Products = products,
+                    Colors = await _catalogService.GetColors(),
+                    Brands = await _catalogService.GetBrands(),
+                    Categories = await _catalogService.GetCaterories(),
+                    Sizes = await _catalogService.GetSizes(),
+                SelectedCategories = categories ?? new List<int>(),
+                SelectedBrands = brands??  new List<int>(),
+                SelectedColors = colors ?? new List<int>(),
+                SelectedSizes = sizes ?? new List<int>(),
+
+                MinPrice = minPrice,
+                MaxPrice = maxPrice,
+
+                TotalPage = totalPages,
+                CurrentPage = pageNumber,
+                PageStart = start,
+                PageEnd = end
+            };
+
         }
 
         [HttpGet]
@@ -48,34 +87,7 @@ namespace ShainingOpt.Controllers
             if (maxPrice != null)
                 products = products.Where(p => p.WholesalePrice <= maxPrice).ToList();
 
-            int totalPages = (int)Math.Ceiling(products.Count / (double)pageSize);
-
-            products = products.Skip(pageNumber - 1).Take(pageSize).ToList();
-
-            var start = Math.Max(1, pageNumber - 2);
-            var end = Math.Min(pageNumber + 2, totalPages);
-
-            var model = new CatalogViewModel
-            {
-                Products = products,
-                Colors = await _catalogService.GetColors(),
-                Brands = await _catalogService.GetBrands(),
-                Categories = await _catalogService.GetCaterories(),
-                Sizes = await _catalogService.GetSizes(),
-
-                SelectedCategories = categories,
-                SelectedBrands = brands,
-                SelectedColors = colors,
-                SelectedSizes = sizes,
-
-                MinPrice = minPrice,
-                MaxPrice = maxPrice,
-
-                TotalPage = totalPages,
-                CurrentPage = pageNumber,
-                PageStart = start,
-                PageEnd = end
-            };
+            var model = await BuildCatalogModelAsync(products, categories, brands, colors, sizes, minPrice, maxPrice, pageSize, pageNumber);
             return View(model);
         }
 
@@ -127,6 +139,13 @@ namespace ShainingOpt.Controllers
                 }).ToList()
             };
             return View(model);
+        }
+
+        public async Task<IActionResult> Search(string text)
+        {
+            var products = await _catalogService.GetProductsWithSearch(text.ToLower().Trim());
+            var model = await BuildCatalogModelAsync(products);
+            return View("Catalog", model);
         }
     }
 }

@@ -78,7 +78,7 @@
                 <form id="addToCartForm" method="post">
                     <input type="hidden" name="variantId" value="@Model.SelectedVariant.ProductVariantId" />
                     <input type="hidden" name="productId" value="@Model.ProductId" />
-                    <input type="hidden" name="quantity" value="value=" @Model.SelectedVariant.MinOrderQuantity" />
+                    <input type="hidden" name="quantity" value="@Model.SelectedVariant.MinOrderQuantity" />
                 <button type="submit" class="product__btn btn">Добавить в корзину</button>
                 </form>
                 }

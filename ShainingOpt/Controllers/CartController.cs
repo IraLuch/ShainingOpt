@@ -1,6 +1,7 @@
 ﻿using MailKit.Search;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Crypto.Prng;
 using ShainingOpt.Migrations;
 using ShainingOpt.Models;
 using ShainingOpt.Services;
@@ -26,72 +27,115 @@ namespace ShainingOpt.Controllers
         [HttpGet]
         public async Task<IActionResult> Cart()
         {
-           
-            var cartId = Request.Cookies["cartId"];
-            if (cartId == null)
+      
+            var cartId = GetOrCreateCartId();
+            var user = await _accountService.GetCurrentUserAsync(User);
+            var cart = await _cartService.GetCart(cartId, user?.Id);
+            if (cart == null || cart.Items == null)
             {
-                return View(new CartViewModel());
+                return View(new CartViewModel
+                {
+                    CartItems = new List<CartItem>() // Передаем пустой список, чтобы View не падала
+                });
             }
-            var cart = await _cartService.GetCartById(cartId);
-
-            var cartItems = await _cartService.GetCartItems(cartId);
-
             var model = new CartViewModel
             {
-                CartItems = cartItems
+                CartItems = cart.Items 
             };
 
             return View(model);
         }
 
+        //[HttpPost]
+        //public async Task<IActionResult> AddToCart(int variantId, int productId, int quantity)
+        //{
+        //    string cartId;
+        //    cartId = Request.Cookies["cartId"];
+        //    var user = await _accountService.GetCurrentUserAsync(User);
+        //    if (cartId == null)
+        //    {
+        //        cartId = Guid.NewGuid().ToString();
+        //        Response.Cookies.Append("cartId", cartId);
+        //        await _cartService.CreateCart(cartId, user?.Id);
+        //    }
+
+
+        //    var cart = await _cartService.GetCart(cartId, user?.Id);
+        //    if (cart == null)
+        //    {
+        //        cart = new Cart
+        //        {
+        //            CartId = Guid.Parse(cartId),
+        //            UserId = user?.Id
+        //        };
+        //    }
+        //    if (cart.UserId == null)
+        //    {
+        //        _cartService.CartToUser(cartId, user?.Id);
+        //    }
+        //    var product = await _catalogService.GetProductWithVariants(productId);
+
+
+        //    var cartItems = cart.Items;
+
+        //    var cartItem = cartItems.FirstOrDefault(i => i.ProductVariantId == variantId);
+
+        //    if (cartItem != null)
+        //    {
+        //        int totalRequestedQuantity = cartItem.Quantity + quantity;
+        //        int finalQuantity = Math.Min(totalRequestedQuantity, cartItem.ProductVariant.Quantity);
+        //        await _cartService.UpdateCartItem(cartItem, finalQuantity);
+        //    }
+        //    else
+        //    {
+        //         cartItem = new CartItem
+        //        {
+        //            CartId = cart.CartId,
+        //            ProductVariantId = variantId,
+        //            Quantity = quantity,
+
+        //        };
+        //        await _cartService.AddItemToCart(cartItem);
+
+        //    }
+
+
+        //    return Json(new { success = true });
+        //}
+
+
         [HttpPost]
         public async Task<IActionResult> AddToCart(int variantId, int productId, int quantity)
         {
-            string cartId;
-            if (!Request.Cookies.ContainsKey("cartId"))
+            var cartId = GetOrCreateCartId();
+            var user = await _accountService.GetCurrentUserAsync(User);
+
+            try
+            {
+                await _cartService.AddItemToCartAsync(cartId, user?.Id, variantId, quantity);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                // Логируем ошибку
+                return Json(new { success = false, message = "Ошибка при добавлении в корзину" });
+            }
+        }
+
+        private string GetOrCreateCartId()
+        {
+            var cartId = Request.Cookies["cartId"];
+            if (string.IsNullOrEmpty(cartId))
             {
                 cartId = Guid.NewGuid().ToString();
                 Response.Cookies.Append("cartId", cartId);
-                await _cartService.CreateCart(cartId);
             }
-            else
-            {
-                cartId = Request.Cookies["cartId"];
-            }
-
-            var cart = await _cartService.GetCartById(cartId);
-            var product = await _catalogService.GetProductWithVariants(productId);
-
-
-            var cartItems = await _cartService.GetCartItems(cartId);
-
-            var cartItem = cartItems.FirstOrDefault(i => i.ProductVariantId == variantId);
-
-            if (cartItem != null)
-            {
-                await _cartService.UpdateCartItem(cartItem, quantity);
-            }
-            else
-            {
-                 cartItem = new CartItem
-                {
-                    CartId = cart.CartId,
-                    ProductVariantId = variantId,
-                    Quantity = quantity,
-
-                };
-                await _cartService.AddItemToCart(cartItem);
-
-            }
-
-
-            return Json(new { success = true });
+            return cartId;
         }
-
         [HttpPost]
         public async Task<IActionResult> DeleteVsriantFromCart(int variantId)
         {
-            var cartId = Request.Cookies["cartId"];
+            var cartId = GetOrCreateCartId();
 
             await _cartService.DeleteVariantFromCart(cartId, variantId);
             var cartItems = await _cartService.GetCartItems(cartId);
@@ -109,14 +153,14 @@ namespace ShainingOpt.Controllers
         {
             var cartItem = await _cartService.GetCartItemById(model.CartItemId);
 
-            await _cartService.UpdateCartItem(cartItem, model.Quantity);
+            await _cartService.UpdateCartItem(cartItem, cartItem.Quantity + model.Quantity);
             return Json(new { success = true });
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateOrder(OrderViewModel model)
         {
-            var cartId = Request.Cookies["cartId"];
+            var cartId = GetOrCreateCartId();
             if (!ModelState.IsValid)
             {
                 var cartModel = new CartViewModel();
@@ -136,8 +180,8 @@ namespace ShainingOpt.Controllers
                 return RedirectToAction("Index", "Home", new { ReturnUrl = "/Cart" });
             }
 
-            var cart = await _cartService.GetCartById(cartId);
-            var items = await _cartService.GetCartItems(cartId);
+            var cart = await _cartService.GetCart(cartId, user?.Id);
+            var items = cart.Items;
 
             var order = new Order
             {
@@ -220,5 +264,7 @@ namespace ShainingOpt.Controllers
             };
             return View(model);
         }
+
+       
     }
 }

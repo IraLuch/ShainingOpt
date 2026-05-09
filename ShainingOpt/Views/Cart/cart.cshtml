@@ -29,7 +29,12 @@
                             <span>Размер: @item.ProductVariant.Size.SizeName</span>
                                 <span>Цвет: @item.ProductVariant.Color.ColorName</span>
                         </div>
-                        <form class="cart__item-actions" method="post" asp-action="DeleteVsriantFromCart" asp-controller="Cart">
+                            @if( item.Quantity > item.ProductVariant.Quantity)
+                            {
+                                <p class="error"> Товара временно нет в наличии.</p>
+                            }
+                                                          
+                            <form class="cart__item-actions" method="post" asp-action="DeleteVsriantFromCart" asp-controller="Cart">
                             <div class="cart__quantity quantity ">
                                 <button type="button" class="cart__quantity-btn quantity-btn" data-action="minus">-</button>
                                     <input type="hidden" name="quantity" class="quantity-input" value="@item.Quantity" />

@@ -81,21 +81,21 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-using (var scope = app.Services.CreateScope())
-{
-    //вытаскиваем RoleManager из ДИ
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+//using (var scope = app.Services.CreateScope())
+//{
+//    //вытаскиваем RoleManager из ДИ
+//    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
 
-    string[] roles = { "Admin", "Manager", "Client" };
+//    string[] roles = { "Admin", "Manager", "Client" };
 
-    foreach (var roleName in roles)
-    {
-        if (!await roleManager.RoleExistsAsync(roleName))
-        {
-            await roleManager.CreateAsync(new Role { Name = roleName });
-        }
-    }
-} 
+//    foreach (var roleName in roles)
+//    {
+//        if (!await roleManager.RoleExistsAsync(roleName))
+//        {
+//            await roleManager.CreateAsync(new Role { Name = roleName });
+//        }
+//    }
+//} 
 app.UseHttpsRedirection();
 app.UseRouting();
 
