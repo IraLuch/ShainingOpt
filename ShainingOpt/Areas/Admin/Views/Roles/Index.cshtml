@@ -1,0 +1,35 @@
+@model IEnumerable<ShainingOpt.Models.Role>
+
+@{
+    ViewData["Title"] = "Роли";
+    Layout = "_AdminLayout";
+}
+
+<h1>Роли</h1>
+
+<p>
+    <a asp-action="Create">Добавить</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Детали</a> 
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -37,7 +37,6 @@
             </nav>
 
 
-          @*   сделать *@
             <form class="header__search" asp-action="Search" asp-controller="Catalog">
                 <input type="text" name="text" class="header__search-input" placeholder="Поиск товаров...">
                 <button type="submit" class="header__search-icon "><img src="~/img/header/search.svg"></button>
@@ -47,7 +46,7 @@
                 <a asp-action="Cart" asp-controller="Cart" class="header__action-btn">
                     <img src="~/img/header/basket.svg" alt="Корзина">
                 </a>
-                    @* сделать *@
+                  
 
                 @if (User.Identity.IsAuthenticated)
                     {
@@ -105,8 +104,7 @@
                 <a href="mailto:bulk@shiningopt.com" class="footer__link">bulk@shiningopt.com</a>
             </address>
                     <div class="footer__legal">
-                        @* сделать *@
-                <a asp-action="Politic" asp-controller="Home" class="footer__policy">Политика конфиденциальности</a>
+
                 <span class="footer__copyright">© 2026 ShiningOpt</span>
             </div>
         </div>

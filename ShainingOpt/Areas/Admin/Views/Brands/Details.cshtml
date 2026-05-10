@@ -1,0 +1,26 @@
+
+
+@model ShainingOpt.Models.Brand
+
+@{
+     Layout = "_AdminLayout";
+    ViewData["Title"] = "Изменение";
+}
+
+<h1>Изменение</h1>
+
+<div>
+    <h4>Бренд</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.BrandName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.BrandName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">Вернуться назад</a>
+</div>

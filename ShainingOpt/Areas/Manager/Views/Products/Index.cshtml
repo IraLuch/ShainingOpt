@@ -1,0 +1,66 @@
+@model IEnumerable<ShainingOpt.Models.Product>
+
+@{
+    Layout = "_ManagerLayout";
+    ViewData["Title"] = "Товары";
+}
+
+<h1>Товары</h1>
+
+<p>
+    <a asp-area="Admin" asp-controller="Products" asp-action="Create">Добавить</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WholesalePrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MainImageUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Brand)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WholesalePrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MainImageUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.CategoryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand.BrandName)
+            </td>
+            <td>
+                <a asp-area="Admin" asp-controller="Products" asp-action="Edit" asp-route-id="@item.ProductId">Изменить</a> |
+                <a asp-area="Admin" asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId">Детали</a> |
+                <a asp-area="Admin" asp-controller="Products" asp-action="Delete" asp-route-id="@item.ProductId">Удалить</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

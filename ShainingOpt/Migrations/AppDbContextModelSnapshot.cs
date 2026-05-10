@@ -15,7 +15,7 @@ namespace ShainingOpt.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "10.0.5");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.7");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
@@ -124,7 +124,8 @@ namespace ShainingOpt.Migrations
 
                     b.Property<string>("BrandName")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("BrandId");
 
@@ -224,9 +225,6 @@ namespace ShainingOpt.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Kpp")
                         .IsRequired()
                         .HasMaxLength(9)
@@ -256,10 +254,7 @@ namespace ShainingOpt.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DeliveryAddress")
@@ -267,8 +262,10 @@ namespace ShainingOpt.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OrderNumber")
-                        .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("OrderStatus")
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("TEXT");
@@ -276,12 +273,7 @@ namespace ShainingOpt.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("orderStatus")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("OrderId");
-
-                    b.HasIndex("CompanyId");
 
                     b.HasIndex("UserId");
 
@@ -310,6 +302,8 @@ namespace ShainingOpt.Migrations
 
                     b.HasIndex("OrderId");
 
+                    b.HasIndex("VariantId");
+
                     b.ToTable("OrderItems");
                 });
 
@@ -325,7 +319,7 @@ namespace ShainingOpt.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
@@ -339,7 +333,8 @@ namespace ShainingOpt.Migrations
 
                     b.Property<string>("ProductName")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<decimal>("WholesalePrice")
                         .HasColumnType("TEXT");
@@ -595,19 +590,11 @@ namespace ShainingOpt.Migrations
 
             modelBuilder.Entity("ShainingOpt.Models.Order", b =>
                 {
-                    b.HasOne("ShainingOpt.Models.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ShainingOpt.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Company");
 
                     b.Navigation("User");
                 });
@@ -620,7 +607,15 @@ namespace ShainingOpt.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ShainingOpt.Models.ProductVariant", "Variant")
+                        .WithMany()
+                        .HasForeignKey("VariantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Order");
+
+                    b.Navigation("Variant");
                 });
 
             modelBuilder.Entity("ShainingOpt.Models.Product", b =>

@@ -7,9 +7,9 @@ namespace ShainingOpt.Models
         [Key]
         public Guid CartId { get; set; }
 
-        [Display(Name = "Пользователь")]
         public int? UserId { get; set; }
 
+        [Display(Name = "Пользователь")]
         public User? User { get; set; }
 
         public ICollection<CartItem> Items { get; set; } = new List<CartItem>();

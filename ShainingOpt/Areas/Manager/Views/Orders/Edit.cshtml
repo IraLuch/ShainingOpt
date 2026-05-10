@@ -1,0 +1,208 @@
+
+
+
+@using ShainingOpt.Models
+@using ShainingOpt.ViewModels
+@model EditOrderViewModel
+
+@{
+    Layout = "_ManagerLayout";
+    ViewData["Title"] = "Изменение";
+}
+<link rel="stylesheet" href="~/css/cart_item.css" asp-append-version="true" />
+<h1>Изменение</h1>
+
+<h4>Заказ</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="@Model.Order.OrderId" />
+            <div class="form-group">
+                <label asp-for="@Model.Order.OrderNumber" class="control-label"></label>
+                <input asp-for="@Model.Order.OrderNumber" class="form-control" />
+                <span asp-validation-for="@Model.Order.OrderNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Order.UserId" class="control-label"></label>
+                <select asp-for="@Model.Order.UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                <span asp-validation-for="@Model.Order.UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Order.OrderStatus" class="control-label"></label>
+                <select asp-for="@Model.Order.OrderStatus" class="form-control" asp-items="Html.GetEnumSelectList<OrderStatus>()">
+                </select>
+                <span asp-validation-for="@Model.Order.OrderStatus" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="@Model.Order.TotalAmount" class="control-label"></label>
+                <p>@Model.Order.TotalAmount</p>
+
+                
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Order.DeliveryAddress" class="control-label"></label>
+                <input asp-for="@Model.Order.DeliveryAddress" class="form-control" />
+                <span asp-validation-for="@Model.Order.DeliveryAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Order.CreatedDate" class="control-label"></label>
+                <input asp-for="@Model.Order.CreatedDate" class="form-control" />
+                <span asp-validation-for="@Model.Order.CreatedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+            </div>
+        </form>
+            <div class="card p-3 bg-light">
+            <form asp-action="AddToOrder" asp-controller="Orders" class="form-group">
+                <input type="hidden" name="orderId" value="@Model.Order.OrderId" />
+                <input type="hidden" name="variantId" value="" />
+                <label class="control-label">Добавить товар в заказ</label>
+                <select id="productSelect" class="form-control select2-products">
+                    <option value="">-- Выберите товар --</option>
+                    @foreach (var p in Model.Products) 
+                    {
+                        <option value="@p.ProductVariantId"
+                                data-img="@p.ImageUrl"
+                                data-price="@p.Product.WholesalePrice"
+                                data-size="@p.Size.SizeName"
+                                data-color="@p.Color.ColorName"
+                                data-min="@p.MinOrderQuantity"
+                                data-max ="@p.Quantity">
+
+                            @p.Product.ProductName (@p.Size.SizeName, @p.Color.ColorName)
+                        </option>
+                    }
+                </select>
+                <br />
+                <input type="number" id="productQty" class="form-control" name="quantity" value="1" min="1" />
+                <br />
+                <button type="submit" id="btnAddProduct" class="btn btn-primary">Добавить</button>
+            </form>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Order.OrderItems" class="control-label"></label>
+                <div class="order__item-body">
+                    <div class="cart__items">
+                        @foreach (var item in Model.Order.OrderItems)
+                        {
+                                
+                            <div class="cart__item">
+                                <div class="cart__item-img">
+                                    <img src="@item.Variant.ImageUrl" alt="">
+                                </div>
+                                <div class="cart__item-info">
+                                    <div class="cart__item-block">
+                                        <div class="cart__item-name">
+                                            @item.Variant.Product.ProductName
+                                        </div>
+                                        <div class="cart__item-price">@item.Variant.Product.WholesalePrice Р</div>
+                                    </div>
+                                    <div class="cart__item-desc">
+                                        <span>Размер: @item.Variant.Size.SizeName</span>
+                                        <span>Цвет: @item.Variant.Color.ColorName</span>
+                                        <span>Количество: @item.Quantity</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+                    
+                    </div>
+                    
+                </div>
+                
+  
+            </div>
+           
+     
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Вернуться назад</a>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+        // 1. Функция форматирования выпадающего списка
+        function formatProduct(state) {
+        if (!state.id) return state.text;
+
+        var img = $(state.element).data('img');
+        var price = $(state.element).data('price');
+        var size = $(state.element).data('size');
+
+        var $state = $(
+        '<div class="d-flex align-items-center">' +
+        '<img src="' + img + '" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px; border-radius: 4px;" />' +
+        '<div>' +
+        '<div style="font-weight: bold;">' + state.text + '</div>' +
+        '<div style="font-size: 0.85em; color: #666;">Цена: ' + price + ' ₽ | Размер: ' + size + '</div>' +
+        '</div>' +
+        '</div>'
+        );
+        return $state;
+        };
+
+        // 2. Инициализация Select2
+        $('#productSelect').select2({
+        templateResult: formatProduct,
+        templateSelection: formatProduct,
+        width: '100%'
+        });
+
+        // 3. Обработка изменения выбора товара
+        $('#productSelect').on('change', function () {
+        var selectedOption = $(this).find(':selected');
+        var val = $(this).val();
+
+        // Обновляем скрытое поле variantId для формы
+        $('input[name="variantId"]').val(val);
+
+        var min = selectedOption.data('min');
+        var max = selectedOption.data('max');
+        var $qtyInput = $('#productQty');
+
+        if (min !== undefined && max !== undefined) {
+        // Устанавливаем лимиты и начальное значение
+        $qtyInput.attr('min', min);
+        $qtyInput.attr('max', max);
+        $qtyInput.val(min);
+
+        if (max <= 0) {
+        $qtyInput.val(0).prop('disabled', true);
+        $('#btnAddProduct').prop('disabled', true).text('Нет в наличии');
+        } else {
+        $qtyInput.prop('disabled', false);
+        $('#btnAddProduct').prop('disabled', false).text('Добавить');
+        }
+        }
+        });
+
+        // 4. Исправление валидации для чисел с плавающей точкой
+        if ($.validator) {
+        $.validator.methods.range = function (value, element, param) {
+        var globalizedValue = value.replace(",", ".");
+        return this.optional(element) || (globalizedValue >= param[0] && globalizedValue <= param[1]);
+        };
+
+        $.validator.methods.number = function (value, element) {
+        return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:[\s\.,]\d{3})+)(?:[\.,]\d+)?$/.test(value);
+        };
+        }
+        }); // Конец $(document).ready
+    </script>
+}

@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Админ панель</title>
+
+    <link href="~/sbadmin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+        <link href="~/sbadmin/css/sb-admin-2.min.css" rel="stylesheet">
+        </head>
+
+        <body id="page-top">
+
+            <div id="wrapper">
+
+                <!-- Sidebar -->
+                <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion">
+
+                    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+                        <div class="sidebar-brand-text">Админ</div>
+                    </a>
+
+                    <hr class="sidebar-divider">
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Products" asp-area="Admin" asp-action="Index">
+                            <span>Товары</span>
+                        </a>
+                    </li>
+                       <li class="nav-item">
+                        <a class="nav-link" asp-controller="ProductVariants" asp-action="Index">
+                            <span>Варианты товаров</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Users" asp-action="Index">
+                            <span>Пользователи</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Roles" asp-action="Index">
+                            <span>Роли</span>
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Brands" asp-action="Index">
+                            <span>Бренды</span>
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Sizes" asp-action="Index">
+                            <span>Размеры</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Colors" asp-action="Index">
+                            <span>Цвета</span>
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Categories" asp-action="Index">
+                            <span>Категории</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Companies" asp-action="Index">
+                            <span>Компании</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Orders" asp-action="Index">
+                            <span>Заказы</span>
+                        </a>
+                    </li>
+
+                </ul>
+
+                <!-- Content -->
+                <div id="content-wrapper" class="d-flex flex-column">
+
+                    <div id="content" class="p-4">
+
+                        @RenderBody()
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <script src="~/sbadmin/vendor/jquery/jquery.min.js"></script>
+            <script src="~/sbadmin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+            <script src="~/sbadmin/js/sb-admin-2.min.js"></script>
+            @RenderSection("Scripts", required: false)
+        </body>
+    </html>

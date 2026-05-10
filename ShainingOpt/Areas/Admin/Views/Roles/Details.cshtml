@@ -1,0 +1,25 @@
+@model ShainingOpt.Models.Role
+
+@{
+    ViewData["Title"] = "Детали";
+    Layout = "_AdminLayout";
+}
+
+<h1>Детали</h1>
+
+<div>
+    <h4>Роль</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Сохранить</a> |
+    <a asp-action="Index">Вернуться назад</a>
+</div>

@@ -67,8 +67,7 @@ namespace ShainingOpt.Services
             var products = await GetProducts();
 
             return products.Where(p => p.ProductName.ToLower().Contains(text) ||
-                p.Brand.BrandName.ToLower().Contains(text) ||
-                p.Category.CategoryName.ToLower().Contains(text))
+                p.Brand.BrandName.ToLower().Contains(text))
                 .ToList();
         }
     }

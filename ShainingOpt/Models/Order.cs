@@ -9,15 +9,9 @@ namespace ShainingOpt.Models
         public int OrderId { get; set; }
 
         [Display(Name = "Номер заказа")]
-        [Required(ErrorMessage = "Введите номер заказа")]
-        public string OrderNumber { get; set; }
-
-        [Display(Name = "Компания")]
-        [Required(ErrorMessage = "Компания не указана")]
-        public int CompanyId { get; set; }
+        public string? OrderNumber { get; set; }
 
         [Display(Name = "Пользователь")]
-        [Required(ErrorMessage = "Пользователь не указан")]
         public int UserId { get; set; }
 
         [Display(Name = "Статус")]
@@ -25,6 +19,7 @@ namespace ShainingOpt.Models
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Created;
 
         [Display(Name = "Сумма")]
+        [Required(ErrorMessage = "Введите сумму заказа")]
         [Range(0.01, 999999, ErrorMessage = "Сумма должна быть больше 0")]
         public decimal TotalAmount { get; set; }
 
@@ -33,11 +28,14 @@ namespace ShainingOpt.Models
         public string DeliveryAddress { get; set; }
 
         [Display(Name = "Дата заказа")]
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public DateTime? CreatedDate { get; set; } = DateTime.Now;
 
-        public Company? Company { get; set; }
+
+        [Display(Name = "Пользователь")]
+        [Required(ErrorMessage = "Пользователь не указан")]
         public User? User { get; set; }
 
+        [Display(Name = "Состав заказа")]
         public List<OrderItem> OrderItems { get; set; } = new();
     }
 

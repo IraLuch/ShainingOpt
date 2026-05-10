@@ -11,7 +11,7 @@ using ShainingOpt.ViewModels;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.WebHost.UseUrls("http://localhost:5212");
+//builder.WebHost.UseUrls("http://localhost:5212");
 
 
 
@@ -106,9 +106,11 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Product}/{action=Index}/{id?}");
+app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();

@@ -25,7 +25,7 @@ document.querySelector('#loginForm').addEventListener('submit', async (e) => {
     const result = await response.json();
 
     if (result.success) {
-        window.location.href = '/Account/Profile';
+        window.location.href = result.redirectUrl;
     }
     else {
         const erElem = document.querySelector('.error')

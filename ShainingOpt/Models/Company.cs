@@ -7,8 +7,6 @@ namespace ShainingOpt.Models
         [Key]
         public int CompanyId { get; set; }
 
-        [Required(ErrorMessage = "Пользователь не указан")]
-        [Display(Name = "Пользователь")]
         public int UserId { get; set; }
 
         [Display(Name = "Название компании")]
@@ -37,10 +35,11 @@ namespace ShainingOpt.Models
         [Display(Name = "Дата регистрации")]
         public DateTime RegistrationDate { get; set; } = DateTime.Now;
 
-        [Display(Name = "Активна")]
-        public bool IsActive { get; set; } = true;
+
 
        
+        [Required(ErrorMessage = "Пользователь не указан")]
+        [Display(Name = "Пользователь")]
         public User? User { get; set; }
     }
 }

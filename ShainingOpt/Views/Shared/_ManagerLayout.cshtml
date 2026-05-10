@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Админ панель</title>
+
+    <link href="~/sbadmin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+        <link href="~/sbadmin/css/sb-admin-2.min.css" rel="stylesheet">
+        </head>
+
+        <body id="page-top">
+
+            <div id="wrapper">
+
+                <!-- Sidebar -->
+                <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion">
+
+                    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+                        <div class="sidebar-brand-text">Менеджер</div>
+                    </a>
+
+                    <hr class="sidebar-divider">
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Products" asp-area="Manager" asp-action="Index">
+                            <span>Товары</span>
+                        </a>
+                    </li>
+                       <li class="nav-item">
+                        <a class="nav-link" asp-controller="ProductVariants" asp-area="Manager" asp-action="Index">
+                            <span>Варианты товаров</span>
+                        </a>
+                    </li>
+                 
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Orders" asp-area="Manager" asp-action="Index">
+                            <span>Заказы</span>
+                        </a>
+                    </li>
+
+                </ul>
+
+                <!-- Content -->
+                <div id="content-wrapper" class="d-flex flex-column">
+
+                    <div id="content" class="p-4">
+
+                        @RenderBody()
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <script src="~/sbadmin/vendor/jquery/jquery.min.js"></script>
+            <script src="~/sbadmin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+            <script src="~/sbadmin/js/sb-admin-2.min.js"></script>
+            @RenderSection("Scripts", required: false)
+        </body>
+    </html>

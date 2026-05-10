@@ -1,0 +1,36 @@
+@model IEnumerable<ShainingOpt.Models.Size>
+
+@{
+    ViewData["Title"] = "Размеры";
+        Layout = "_AdminLayout";
+}
+
+<h1>Размеры</h1>
+
+<p>
+    <a asp-action="Create">Добавить</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SizeName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SizeName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.SizeId">Изменить</a> |
+                <a asp-action="Details" asp-route-id="@item.SizeId">Детали</a> |
+                <a asp-action="Delete" asp-route-id="@item.SizeId">Удалить</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

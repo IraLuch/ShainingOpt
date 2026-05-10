@@ -1,0 +1,71 @@
+@model IEnumerable<ShainingOpt.Models.Company>
+
+@{
+    ViewData["Title"] = "Компании";
+    Layout = "_AdminLayout";
+}
+
+<h1>Компании</h1>
+
+@* <p>
+    <a asp-action="Create">Create New</a>
+</p> *@
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Inn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Kpp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LegalAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactPerson)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RegistrationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Inn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Kpp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LegalAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactPerson)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegistrationDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Email)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CompanyId">Изменить</a> |
+                <a asp-action="Details" asp-route-id="@item.CompanyId">Детали</a> |
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

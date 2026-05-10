@@ -1,0 +1,91 @@
+@model ShainingOpt.Models.Order
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Детали";
+
+}
+<link rel="stylesheet" href="~/css/cart_item.css" asp-append-version="true" />
+<h1>Детали</h1>
+
+<div>
+    <h4>Заказ</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.OrderNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OrderNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.OrderStatus)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OrderStatus)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TotalAmount)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TotalAmount)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.OrderItems)
+        </dt>
+        <dd class="col-sm-10">
+                            <div class="order__item-body">
+                                <div class="cart__items">
+                                    @foreach (var item in Model.OrderItems)
+                                    {
+                                
+                                        <div class="cart__item">
+                                            <div class="cart__item-img">
+                                                <img src="@item.Variant.ImageUrl" alt="">
+                                            </div>
+                                            <div class="cart__item-info">
+                                                <div class="cart__item-block">
+                                                    <div class="cart__item-name">
+                                                        @item.Variant.Product.ProductName
+                                                    </div>
+                                                    <div class="cart__item-price">@item.Variant.Product.WholesalePrice Р</div>
+                                                </div>
+                                                <div class="cart__item-desc">
+                                                    <span>Размер: @item.Variant.Size.SizeName</span>
+                                                    <span>Цвет: @item.Variant.Color.ColorName</span>
+                                                    <span>Количество: @item.Quantity</span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    }
+                    
+                                </div>
+                            </div>
+                
+  
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DeliveryAddress)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DeliveryAddress)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.User.Email)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">Вернуться назад</a>
+</div>

@@ -96,7 +96,7 @@ namespace ShainingOpt.Controllers
             var product = await _catalogService.GetProductWithVariants(productId);
             if (product == null)
             {
-                return View("Index"); //страница ошибки
+                return NotFound();
             }
 
             var variant = variantId == null ?
@@ -105,7 +105,7 @@ namespace ShainingOpt.Controllers
 
             if (variant == null)
             {
-                return View("Index"); //страницв ошибки
+                return NotFound();
             }
 
             var model = new ProductViewModel

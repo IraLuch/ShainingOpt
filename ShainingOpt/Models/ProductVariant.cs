@@ -23,9 +23,13 @@ namespace ShainingOpt.Models
         public Size? Size { get; set; }
 
         [Display(Name = "Количество на складе")]
+        [Required(ErrorMessage = "Укажите количество")]
+        [Range(1, int.MaxValue, ErrorMessage = "Количсетво не может быть меньше либо равно 0")]
         public int Quantity { get; set; }
 
         [Display(Name = "Минимальное количество на складе")]
+        [Required(ErrorMessage = "Укажите количество")]
+        [Range(1, int.MaxValue, ErrorMessage = "Количсетво не может быть меньше либо равно 0")]
         public int MinOrderQuantity { get; set; } = 20;
 
         [Display(Name = "Фото варианта")]

@@ -5,6 +5,7 @@ using ShainingOpt.DataBase;
 using ShainingOpt.Mappers;
 using ShainingOpt.Models;
 using ShainingOpt.ViewModels;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 
 namespace ShainingOpt.Services
@@ -16,11 +17,13 @@ namespace ShainingOpt.Services
         private readonly AppDbContext _context;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly RoleManager<Role> _roleManager;
         public AccountService(AppDbContext context, UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
         public async Task<IdentityResult> RegisterUserAsync(RegisterViewModel model)
         {
@@ -30,17 +33,22 @@ namespace ShainingOpt.Services
                 return IdentityResult.Failed();
 
             }
-
+            var clientRole = await _roleManager.FindByNameAsync("Client");
             var user = new User
             {
                 Email = model.Email,
                 UserName = model.Email,
-                PhoneNumber = model.PhoneNumber
+                PhoneNumber = model.PhoneNumber,
+                RoleId = clientRole.Id
+                
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
+            {
                 return result;
+
+            }
 
                 await _userManager.AddToRoleAsync(user, "Client");
 
@@ -170,6 +178,12 @@ namespace ShainingOpt.Services
         internal async Task Logout()
         {
            await _signInManager.SignOutAsync();
+        }
+
+        internal async Task<bool> IsInRoleAsync(User? user, string v)
+        {
+            var roles = await _userManager.GetRolesAsync(user);
+            return await _userManager.IsInRoleAsync(user, v);
         }
     } }
 

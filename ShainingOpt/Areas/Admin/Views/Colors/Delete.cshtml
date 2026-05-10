@@ -1,0 +1,27 @@
+@model ShainingOpt.Models.Color
+
+@{
+    ViewData["Title"] = "Удаление";
+    Layout = "_AdminLayout";
+}
+
+<h1>Удаление</h1>
+
+<div>
+    <h4>Color</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ColorName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ColorName)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="ColorId" />
+        <input type="submit" value="Удаление" class="btn btn-danger" /> |
+        <a asp-action="Index">Вернуться назад</a>
+    </form>
+</div>

@@ -17,14 +17,15 @@ namespace ShainingOpt.Controllers
         private readonly AccountService _accountService;
         private readonly EmailService _emailService;
         private readonly CartService _cartService;
-        public AccountController(AccountService accountService, EmailService emailService)
+        public AccountController(AccountService accountService, EmailService emailService, CartService cartService)
         {
             _accountService = accountService;
             _emailService = emailService;
+            _cartService = cartService;
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> Profile()
         {
 
@@ -59,7 +60,7 @@ namespace ShainingOpt.Controllers
             var user = await _accountService.GetCurrentUserAsync(User);
             if (user is null)
             {
-                return RedirectToAction("Register", "Account"); // страница ошибки
+                return NotFound(); // страница ошибки
             }
             var profileModel = ProfileMapper.FromUpdateModel(model, user);
             if (!ModelState.IsValid)
@@ -89,7 +90,7 @@ namespace ShainingOpt.Controllers
             var user = await _accountService.GetCurrentUserAsync(User);
             if (user is null)
             {
-                return RedirectToAction("Register", "Account"); // страница ошибки
+                ModelState.AddModelError("SecurityError", "Что-то пошло не так. Попробуйте еще раз");
             }
             var profileModel = ProfileMapper.ToViewModel(user);
             if (!ModelState.IsValid)
@@ -135,6 +136,7 @@ namespace ShainingOpt.Controllers
                 }
             }
 
+          
             return RedirectToAction("Profile", "Account");
         }
 
@@ -147,7 +149,6 @@ namespace ShainingOpt.Controllers
                 return Ok(new { success = false, message = "Заполните все поля корректно" });
          
             }
-
             var res = await _accountService.LoginUserAsync(model);
             if (!res.Succeeded)
             {
@@ -155,7 +156,27 @@ namespace ShainingOpt.Controllers
 
             }
 
-            return Ok(new { success = true });
+            var user = await _accountService.GetCurrentUserAsync(User);
+            string redirectUrl = Url.Action("Profile", "Account"); 
+
+            if (await _accountService.IsInRoleAsync(user, "Admin"))
+            {
+                redirectUrl = Url.Action("Products", "Admin");
+                return Ok(new { success = true, redirectUrl = redirectUrl });
+            }
+            if (await _accountService.IsInRoleAsync(user, "Manager"))
+            {
+                redirectUrl = Url.Action("Products", "Manager");
+                return Ok(new { success = true, redirectUrl = redirectUrl });
+            }
+
+
+            var cartId = Request.Cookies["cartId"];
+            await _cartService.MergeCarts(cartId, user.Id);
+
+
+
+            return Ok(new { success = true, redirectUrl = redirectUrl });
         }
 
         [HttpGet]

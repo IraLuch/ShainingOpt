@@ -25,19 +25,21 @@ namespace ShainingOpt.Models
 
         [Display(Name = "Оптовая цена")]
         [Required(ErrorMessage = "Введите цену")]
-        [Range(0.01, 999999, ErrorMessage = "Цена должна быть больше 0" )]
+        [Range(0, 999999, ErrorMessage = "Цена должна быть числом")]
+        [RegularExpression(@"^\d+([.,]\d{1,2})?$", ErrorMessage = "Цена должна быть числом")]
         public decimal WholesalePrice { get; set; }
 
         [Display(Name = "Активен")]
         public bool IsActive { get; set; } = true;
 
         [Display(Name = "Изображение")]
+      
         public string? MainImageUrl { get; set; }
 
         [Display(Name = "Дата создания")]
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
-
+        public DateTime? CreatedDate { get; set; } = DateTime.Now;
         public Category? Category { get; set; }
+
         public Brand? Brand { get; set; }
 
         public ICollection<ProductVariant>? ProductVariants { get; set; } = new List<ProductVariant>();

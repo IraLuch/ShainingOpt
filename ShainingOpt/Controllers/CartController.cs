@@ -35,7 +35,7 @@ namespace ShainingOpt.Controllers
             {
                 return View(new CartViewModel
                 {
-                    CartItems = new List<CartItem>() // Передаем пустой список, чтобы View не падала
+                    CartItems = new List<CartItem>() 
                 });
             }
             var model = new CartViewModel
@@ -46,63 +46,7 @@ namespace ShainingOpt.Controllers
             return View(model);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> AddToCart(int variantId, int productId, int quantity)
-        //{
-        //    string cartId;
-        //    cartId = Request.Cookies["cartId"];
-        //    var user = await _accountService.GetCurrentUserAsync(User);
-        //    if (cartId == null)
-        //    {
-        //        cartId = Guid.NewGuid().ToString();
-        //        Response.Cookies.Append("cartId", cartId);
-        //        await _cartService.CreateCart(cartId, user?.Id);
-        //    }
-
-
-        //    var cart = await _cartService.GetCart(cartId, user?.Id);
-        //    if (cart == null)
-        //    {
-        //        cart = new Cart
-        //        {
-        //            CartId = Guid.Parse(cartId),
-        //            UserId = user?.Id
-        //        };
-        //    }
-        //    if (cart.UserId == null)
-        //    {
-        //        _cartService.CartToUser(cartId, user?.Id);
-        //    }
-        //    var product = await _catalogService.GetProductWithVariants(productId);
-
-
-        //    var cartItems = cart.Items;
-
-        //    var cartItem = cartItems.FirstOrDefault(i => i.ProductVariantId == variantId);
-
-        //    if (cartItem != null)
-        //    {
-        //        int totalRequestedQuantity = cartItem.Quantity + quantity;
-        //        int finalQuantity = Math.Min(totalRequestedQuantity, cartItem.ProductVariant.Quantity);
-        //        await _cartService.UpdateCartItem(cartItem, finalQuantity);
-        //    }
-        //    else
-        //    {
-        //         cartItem = new CartItem
-        //        {
-        //            CartId = cart.CartId,
-        //            ProductVariantId = variantId,
-        //            Quantity = quantity,
-
-        //        };
-        //        await _cartService.AddItemToCart(cartItem);
-
-        //    }
-
-
-        //    return Json(new { success = true });
-        //}
-
+    
 
         [HttpPost]
         public async Task<IActionResult> AddToCart(int variantId, int productId, int quantity)
@@ -117,7 +61,6 @@ namespace ShainingOpt.Controllers
             }
             catch (Exception ex)
             {
-                // Логируем ошибку
                 return Json(new { success = false, message = "Ошибка при добавлении в корзину" });
             }
         }
@@ -130,6 +73,7 @@ namespace ShainingOpt.Controllers
                 cartId = Guid.NewGuid().ToString();
                 Response.Cookies.Append("cartId", cartId);
             }
+          
             return cartId;
         }
         [HttpPost]
@@ -186,21 +130,27 @@ namespace ShainingOpt.Controllers
             var order = new Order
             {
                 OrderNumber = $"ORD-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid().ToString().Substring(0, 5)}",
-                CompanyId = user.Company.CompanyId,
                 UserId = user.Id,
                 OrderStatus = OrderStatus.Created,
                 TotalAmount = items.Sum(i => i.Quantity * i.ProductVariant.Product.WholesalePrice),
                 DeliveryAddress = model.DeliveryAddress,
             };
 
-            var orderItems = items.Select(i => new OrderItem { 
-               
-                VariantId = i.ProductVariantId,
-                Quantity = i.Quantity,
-                TotalPrice = i.Quantity * i.ProductVariant.Product.WholesalePrice
+            var orderItems = new List<OrderItem>();
+            foreach (var item in cart.Items)
+            {
+                var variant = item.ProductVariant;
+                variant.Quantity -= item.Quantity;
 
-            }).ToList();
+                await _cartService.UpdateProductVariant(variant);
 
+                orderItems.Add(new OrderItem
+                {
+                    VariantId = item.ProductVariantId,
+                    Quantity = item.Quantity,
+                    TotalPrice = item.Quantity * item.ProductVariant.Product.WholesalePrice
+                });
+            }
 
 
             var res = await _cartService.CreateOrderWithItems(order, orderItems);
@@ -233,11 +183,6 @@ namespace ShainingOpt.Controllers
             {
                 var orderId = int.Parse(notification.Object.Metadata["OrderId"]);
                 var order = await _cartService.GetOrderById(orderId);
-                if (order == null)
-                {
-                    
-                    return Ok();
-                }
 
                 await _cartService.UpdateOrderStatus(order, OrderStatus.Processing);
 
