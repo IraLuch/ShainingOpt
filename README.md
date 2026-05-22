@@ -17,7 +17,7 @@
 ## Стек технологий
 
 * **Backend:** C#, .NET 10 (ASP.NET Core MVC)
-* **Database & ORM:** Entity Framework Core 
+* **Database & ORM:** SQLite, Entity Framework Core 
 * **Security:** ASP.NET Core Identity (авторизация по ролям: Admin, Manager, Client), Anti-Forgery Tokens (защита от CSRF-атак)
 * **Frontend-логика:** JavaScript (использование Select2), AJAX (Fetch API).
 * **Инструменты разработки и тестирования:** Cloudflare Tunnel (`cloudflared`) для локальной отладки входящих вебхуков от платежной системы на `localhost`.
