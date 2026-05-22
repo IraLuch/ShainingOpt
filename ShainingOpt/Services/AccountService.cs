@@ -4,8 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ShainingOpt.DataBase;
 using ShainingOpt.Mappers;
 using ShainingOpt.Models;
-using ShainingOpt.ViewModels;
-using System.Reflection.Metadata.Ecma335;
+using ShainingOpt.ViewModels.Account;
 using System.Security.Claims;
 
 namespace ShainingOpt.Services
@@ -87,18 +86,18 @@ namespace ShainingOpt.Services
             return IdentityResult.Success;
     }
 
-        internal async Task<User?> UserExsiting(string email)
+        public async Task<User?> UserExsiting(string email)
         {
             return await _userManager.FindByEmailAsync(email);
         }
 
-        internal async Task<string> GetTokenAsync(User user)
+        public async Task<string> GetTokenAsync(User user)
         {
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             return token;
         }
 
-        internal async Task<IdentityResult> ResetPasswordAsync(User user, NewPasswordViewModel model)
+        public async Task<IdentityResult> ResetPasswordAsync(User user, NewPasswordViewModel model)
         {
             var res = await _userManager.ResetPasswordAsync(user, model.Token ,model.NewPassword);
             return res;
@@ -115,7 +114,7 @@ namespace ShainingOpt.Services
             return await _context.Users.Include(c => c.Company).FirstOrDefaultAsync(u => user.Id == u.Id);
         }
 
-        internal async Task<IdentityResult> UpdateUserAndCompanyDataAsync(User user, UpdateProfileDataViewModel model)
+        public async Task<IdentityResult> UpdateUserAndCompanyDataAsync(User user, UpdateProfileDataViewModel model)
         {
 
             try
@@ -134,13 +133,13 @@ namespace ShainingOpt.Services
             }
         }
 
-        internal async Task<IdentityResult> UpdateSecurityData(User user, UpdateSecurityDataViewModel model)
+        public async Task<IdentityResult> UpdateSecurityData(User user, UpdateSecurityDataViewModel model)
         {
             var res = await _userManager.ChangePasswordAsync(user, model.Password, model.NewPassword) ;
             return res;
         }
 
-        internal async Task<ProfileViewModel> BuildProfileViewModelAsync(User user, UpdateProfileDataViewModel model = null)
+        public async Task<ProfileViewModel> BuildProfileViewModelAsync(User user, UpdateProfileDataViewModel model = null)
         {
             var company = await _context.Companies.FirstOrDefaultAsync(u => u.User.Id == user.Id);
             if (model != null)
@@ -175,12 +174,12 @@ namespace ShainingOpt.Services
             };
         }
 
-        internal async Task Logout()
+        public async Task Logout()
         {
            await _signInManager.SignOutAsync();
         }
 
-        internal async Task<bool> IsInRoleAsync(User? user, string v)
+        public async Task<bool> IsInRoleAsync(User? user, string v)
         {
             var roles = await _userManager.GetRolesAsync(user);
             return await _userManager.IsInRoleAsync(user, v);

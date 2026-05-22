@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.InteropServices;
 
-namespace ShainingOpt.ViewModels
+namespace ShainingOpt.ViewModels.Orders
 {
     public class EditOrderViewModel
     {

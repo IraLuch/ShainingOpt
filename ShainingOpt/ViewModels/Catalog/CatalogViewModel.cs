@@ -1,6 +1,6 @@
 ﻿using ShainingOpt.Models;
 
-namespace ShainingOpt.ViewModels
+namespace ShainingOpt.ViewModels.Catalog
 {
     public class CatalogViewModel
     {

@@ -3113,11 +3113,11 @@
   };
 
   /**
-   * Internal helper to bind a function known to have 4 arguments
+   * public helper to bind a function known to have 4 arguments
    * to a given context.
    */
 
-  var bindInternal4 = function bindInternal4(func, thisContext) {
+  var bindpublic4 = function bindpublic4(func, thisContext) {
     return function (a, b, c, d) {
       return func.call(thisContext, a, b, c, d);
     };
@@ -3139,7 +3139,7 @@
   var reduce = function fastReduceObject(subject, fn, initialValue, thisContext) {
     var keys = Object.keys(subject),
         length = keys.length,
-        iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn,
+        iterator = thisContext !== undefined ? bindpublic4(fn, thisContext) : fn,
         i,
         key,
         result;

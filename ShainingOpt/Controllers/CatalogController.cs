@@ -2,11 +2,16 @@
 using ShainingOpt.Models;
 using ShainingOpt.Services;
 using ShainingOpt.ViewModels;
+using ShainingOpt.ViewModels.Catalog;
 using System.Drawing;
 using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 
 namespace ShainingOpt.Controllers
 {
+    /// <summary>
+    /// Контроллер каталога товаров. 
+    /// Отвечает за фильтрацию, поиск, пагинацию и просмотр карточки конкретного товара.
+    /// </summary>
     public class CatalogController: Controller
     {
         private readonly CatalogService _catalogService;
@@ -16,6 +21,11 @@ namespace ShainingOpt.Controllers
              _catalogService = catalogService;   
         }
 
+
+        /// <summary>
+        /// Вспомогательный метод для сборки комплексной ViewModel каталога.
+        /// Выполняет пагинацию коллекции товаров и подгружает списки для фильтров SideBar.
+        /// </summary>
         private async Task<CatalogViewModel> BuildCatalogModelAsync(List<Product> products,
             List<int>? categories = null,
     List<int>? brands = null,
@@ -53,6 +63,10 @@ namespace ShainingOpt.Controllers
 
         }
 
+
+        /// <summary>
+        /// Отображение основной страницы каталога с применением множественных фильтров.
+        /// </summary>
         [HttpGet]
         public async  Task<IActionResult> Catalog(
             List<int> categories ,
@@ -91,6 +105,11 @@ namespace ShainingOpt.Controllers
             return View(model);
         }
 
+
+        /// <summary>
+        /// Карточка конкретного товара с возможностью динамического переключения торговых модификаций (вариантов).
+        /// </summary>
+     
         public async Task<IActionResult> Product(int productId, int? variantId)
         {
             var product = await _catalogService.GetProductWithVariants(productId);
@@ -141,6 +160,10 @@ namespace ShainingOpt.Controllers
             return View(model);
         }
 
+
+        /// <summary>
+        /// Полнотекстовый или частичный поиск по наименованию / описанию товаров.
+        /// </summary>
         public async Task<IActionResult> Search(string text)
         {
             var products = await _catalogService.GetProductsWithSearch(text.ToLower().Trim());

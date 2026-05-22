@@ -475,7 +475,7 @@
 		 *  @param {int|node} [src] A TR row node, TD/TH cell node or an integer. If given as
 		 *    a TR node then the data source for the whole row will be returned. If given as a
 		 *    TD/TH cell node then iCol will be automatically calculated and the data for the
-		 *    cell returned. If given as an integer, then this is treated as the aoData internal
+		 *    cell returned. If given as an integer, then this is treated as the aoData public
 		 *    data index for the row (see fnGetPosition) and the data for that row used.
 		 *  @param {int} [col] Optional column index that you want the data of.
 		 *  @returns {array|object|string} If mRow is undefined, then the data for all rows is
@@ -669,7 +669,7 @@
 		
 		
 		/**
-		 * Change the pagination - provides the internal logic for pagination in a simple API
+		 * Change the pagination - provides the public logic for pagination in a simple API
 		 * function. With this function you can have a DataTables table go to the next,
 		 * previous, first or last pages.
 		 *  @param {string|int} mAction Paging action to take: "first", "previous", "next" or "last"
@@ -857,10 +857,10 @@
 			options = {};
 		}
 
-		this.oApi = this.internal = _ext.internal;
+		this.oApi = this.public = _ext.public;
 
 		// Extend with old style plug-in API methods
-		for ( var fn in DataTable.ext.internal ) {
+		for ( var fn in DataTable.ext.public ) {
 			if ( fn ) {
 				this[fn] = _fnExternApiFunc(fn);
 			}
@@ -959,7 +959,7 @@
 				"sTableId":      sId
 			} );
 			oSettings.nTable = this;
-			oSettings.oApi   = _that.internal;
+			oSettings.oApi   = _that.public;
 			oSettings.oInit  = oInit;
 			
 			allSettings.push( oSettings );
@@ -1623,7 +1623,7 @@
 	/**
 	 * DataTables utility methods
 	 * 
-	 * This namespace provides helper methods that DataTables uses internally to
+	 * This namespace provides helper methods that DataTables uses publicly to
 	 * create a DataTable, but which are not exclusively used only for DataTables.
 	 * These methods can be used by extension authors to save the duplication of
 	 * code.
@@ -2516,7 +2516,7 @@
 	
 	
 	/**
-	 * Get the data for a given cell from the internal cache, taking into account data mapping
+	 * Get the data for a given cell from the public cache, taking into account data mapping
 	 *  @param {object} settings dataTables settings object
 	 *  @param {int} rowIdx aoData row id
 	 *  @param {int} colIdx Column index
@@ -2565,7 +2565,7 @@
 	
 	
 	/**
-	 * Set the value for a specific cell, into the internal data cache
+	 * Set the value for a specific cell, into the public data cache
 	 *  @param {object} settings dataTables settings object
 	 *  @param {int} rowIdx aoData row id
 	 *  @param {int} colIdx Column index
@@ -3581,7 +3581,7 @@
 		}
 	
 		// Let any modules know about the draw hold position state (used by
-		// scrolling internally)
+		// scrolling publicly)
 		settings._drawHold = holdPosition;
 	
 		_fnDraw( settings );
@@ -4592,7 +4592,7 @@
 	
 	
 	/**
-	 * Convert from the internal Hungarian notation to camelCase for external
+	 * Convert from the public Hungarian notation to camelCase for external
 	 * interaction
 	 *  @param {object} obj Object to convert
 	 *  @returns {object} Inverted object
@@ -4611,7 +4611,7 @@
 	
 	
 	/**
-	 * Convert from camelCase notation to the internal Hungarian. We could use the
+	 * Convert from camelCase notation to the public Hungarian. We could use the
 	 * Hungarian convert function here, but this is cleaner
 	 *  @param {object} obj Object to convert
 	 *  @returns {object} Inverted object
@@ -4708,7 +4708,7 @@
 	function _fnInfoMacros ( settings, str )
 	{
 		// When infinite scrolling, we are always starting at 1. _iDisplayStart is used only
-		// internally
+		// publicly
 		var
 			formatter  = settings.fnFormatNumber,
 			start      = settings._iDisplayStart+1,
@@ -8349,7 +8349,7 @@
 				}
 	
 				api.rows( {page:'current'} ).eq(0).each( function (idx) {
-					// Internal data grab
+					// public data grab
 					var row = data[ idx ];
 	
 					if ( row._detailsShow ) {
@@ -8875,15 +8875,15 @@
 		}
 	
 		// The default built in options need to apply to row and columns
-		var internalOpts = opts ? {
+		var publicOpts = opts ? {
 			page: opts.page,
 			order: opts.order,
 			search: opts.search
 		} : {};
 	
 		// Row + column selector
-		var columns = this.columns( columnSelector, internalOpts );
-		var rows = this.rows( rowSelector, internalOpts );
+		var columns = this.columns( columnSelector, publicOpts );
+		var rows = this.rows( rowSelector, publicOpts );
 		var i, ien, j, jen;
 	
 		var cellsNoOpts = this.iterator( 'table', function ( settings, idx ) {
@@ -9411,7 +9411,7 @@
 				new _Api( settings ).columns().visible( true );
 			}
 	
-			// Blitz all `DT` namespaced events (these are internal events, the
+			// Blitz all `DT` namespaced events (these are public events, the
 			// lowercase, `dt` events are user subscribed and they are responsible
 			// for removing them
 			jqWrapper.off('.DT').find(':not(tbody *)').off('.DT');
@@ -9706,7 +9706,7 @@
 	 * DataTables needs about each individual column.
 	 *
 	 * Note that this object is related to {@link DataTable.defaults.column}
-	 * but this one is the internal data store for DataTables's cache of columns.
+	 * but this one is the public data store for DataTables's cache of columns.
 	 * It should NOT be manipulated outside of DataTables. Any configuration should
 	 * be done through the initialisation options.
 	 *  @namespace
@@ -9794,7 +9794,7 @@
 	
 		/**
 		 * Function to get data from a cell in a column. You should <b>never</b>
-		 * access data directly through _aData internally in DataTables - always use
+		 * access data directly through _aData publicly in DataTables - always use
 		 * the method attached to this property. It allows mData to function as
 		 * required. This function is automatically assigned by the column
 		 * initialisation method
@@ -9810,7 +9810,7 @@
 	
 		/**
 		 * Function to set data for a cell in the column. You should <b>never</b>
-		 * set the data directly to _aData internally in DataTables - always use
+		 * set the data directly to _aData publicly in DataTables - always use
 		 * this method. It allows mData to function as required. This function
 		 * is automatically assigned by the column initialisation method
 		 *  @type function
@@ -9950,7 +9950,7 @@
 	 * notation, that was used as the interface for DataTables prior to v1.10, however
 	 * from v1.10 onwards the primary interface is camel case. In order to avoid
 	 * breaking backwards compatibility utterly with this change, the Hungarian
-	 * version is still, internally the primary interface, but is is not documented
+	 * version is still, publicly the primary interface, but is is not documented
 	 * - hence the @name tags in each doc comment. This allows a Javascript function
 	 * to create a map from Hungarian notation to camel case (going the other direction
 	 * would require each property to be listed, which would add around 3K to the size
@@ -10130,7 +10130,7 @@
 		 *   data source for the table. This supersedes `sAjaxDataProp` from
 		 *   DataTables 1.9-.
 		 *
-		 * * `success` - Should not be overridden it is used internally in
+		 * * `success` - Should not be overridden it is used publicly in
 		 *   DataTables. To manipulate / transform the data returned by the server
 		 *   use `ajax.dataSrc`, or use `ajax` as a function (see below).
 		 *
@@ -10719,7 +10719,7 @@
 		 *  @type function
 		 *  @param {node} row "TR" element for the current row
 		 *  @param {array} data Raw data array for this row
-		 *  @param {int} dataIndex The index of this row in the internal aoData array
+		 *  @param {int} dataIndex The index of this row in the public aoData array
 		 *
 		 *  @dtopt Callbacks
 		 *  @name DataTable.defaults.createdRow
@@ -12839,7 +12839,7 @@
 	
 		/**
 		 * Defines a data source type for the ordering which can be used to read
-		 * real-time information from the table (updating the internally cached
+		 * real-time information from the table (updating the publicly cached
 		 * version) prior to ordering. This allows ordering to occur on user
 		 * editable elements such as form inputs.
 		 *  @type string
@@ -13008,7 +13008,7 @@
 	 * instance.
 	 *
 	 * Note that this object is related to {@link DataTable.defaults} but this
-	 * one is the internal data store for DataTables's cache of columns. It should
+	 * one is the public data store for DataTables's cache of columns. It should
 	 * NOT be manipulated outside of DataTables. Any configuration should be done
 	 * through the initialisation options.
 	 *  @namespace
@@ -13857,7 +13857,7 @@
 		/**
 		 * Unique identifier for each instance of the DataTables object. If there
 		 * is an ID on the table node, then it takes that value, otherwise an
-		 * incrementing internal counter is used.
+		 * incrementing public counter is used.
 		 *  @type string
 		 *  @default null
 		 */
@@ -14107,16 +14107,16 @@
 	
 	
 		/**
-		 * Internal functions, exposed for used in plug-ins.
+		 * public functions, exposed for used in plug-ins.
 		 * 
-		 * Please note that you should not need to use the internal methods for
+		 * Please note that you should not need to use the public methods for
 		 * anything other than a plug-in (and even then, try to avoid if possible).
-		 * The internal function may change between releases.
+		 * The public function may change between releases.
 		 *
 		 *  @type object
 		 *  @default {}
 		 */
-		internal: {},
+		public: {},
 	
 	
 		/**
@@ -14453,7 +14453,7 @@
 		oSort:        _ext.type.order,
 		afnSortData:  _ext.order,
 		aoFeatures:   _ext.feature,
-		oApi:         _ext.internal,
+		oApi:         _ext.public,
 		oStdClasses:  _ext.classes,
 		oPagination:  _ext.pager
 	} );
@@ -14985,7 +14985,7 @@
 	} );
 	
 	/*
-	 * Public helper functions. These aren't used internally by DataTables, or
+	 * Public helper functions. These aren't used publicly by DataTables, or
 	 * called by any of the options passed into DataTables, but they can be used
 	 * externally by developers working with DataTables. They are helper functions
 	 * to make working with DataTables a little bit easier.
@@ -15073,16 +15073,16 @@
 	
 	
 	/*
-	 * This is really a good bit rubbish this method of exposing the internal methods
+	 * This is really a good bit rubbish this method of exposing the public methods
 	 * publicly... - To be fixed in 2.0 using methods on the prototype
 	 */
 	
 	
 	/**
-	 * Create a wrapper function for exporting an internal functions to an external API.
+	 * Create a wrapper function for exporting an public functions to an external API.
 	 *  @param {string} fn API function name
 	 *  @returns {function} wrapped function
-	 *  @memberof DataTable#internal
+	 *  @memberof DataTable#public
 	 */
 	function _fnExternApiFunc (fn)
 	{
@@ -15090,19 +15090,19 @@
 			var args = [_fnSettingsFromNode( this[DataTable.ext.iApiIndex] )].concat(
 				Array.prototype.slice.call(arguments)
 			);
-			return DataTable.ext.internal[fn].apply( this, args );
+			return DataTable.ext.public[fn].apply( this, args );
 		};
 	}
 	
 	
 	/**
-	 * Reference to internal functions for use by plug-in developers. Note that
-	 * these methods are references to internal functions and are considered to be
+	 * Reference to public functions for use by plug-in developers. Note that
+	 * these methods are references to public functions and are considered to be
 	 * private. If you use these methods, be aware that they are liable to change
 	 * between versions.
 	 *  @namespace
 	 */
-	$.extend( DataTable.ext.internal, {
+	$.extend( DataTable.ext.public, {
 		_fnExternApiFunc: _fnExternApiFunc,
 		_fnBuildAjax: _fnBuildAjax,
 		_fnAjaxUpdate: _fnAjaxUpdate,

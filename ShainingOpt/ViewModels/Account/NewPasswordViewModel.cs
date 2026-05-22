@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ShainingOpt.ViewModels
+namespace ShainingOpt.ViewModels.Account
 {
     public class NewPasswordViewModel
     {

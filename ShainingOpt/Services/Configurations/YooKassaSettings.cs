@@ -1,4 +1,4 @@
-﻿namespace ShainingOpt.ViewModels
+﻿namespace ShainingOpt.Services.Configurations
 {
     public class YooKassaSettings
     {

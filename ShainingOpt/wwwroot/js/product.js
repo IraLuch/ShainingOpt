@@ -22,20 +22,6 @@
     qntElem.textContent = count;
     document.querySelector('input[name="quantity"]').value = count;
 
-    //if (btnElem.dataset.action === 'size') {
-    //    document.querySelectorAll('[data-action="size"]').forEach((item) => {
-    //        item.classList.remove('product__variant--active');
-    //    })
-    //    btnElem.classList.add('product__variant--active');
-    //}
-
-
-    //if (btnElem.dataset.action === 'color') {
-    //    document.querySelectorAll('[data-action="color"]').forEach((item) => {
-    //        item.classList.remove('product__variant--active');
-    //    })
-    //    btnElem.classList.add('product__variant--active');
-    //}
 })
 
 document.querySelector("#addToCartForm").addEventListener('submit', async function (e) {

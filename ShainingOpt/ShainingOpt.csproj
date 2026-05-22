@@ -25,4 +25,8 @@
     <PackageReference Include="Yandex.Checkout.V3" Version="4.3.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\Interfaces\" />
+  </ItemGroup>
+
 </Project>

@@ -3808,7 +3808,7 @@ helpers$1.extend(DatasetController.prototype, {
 
 		// In order to correctly handle data addition/deletion animation (an thus simulate
 		// real-time charts), we need to monitor these data modifications and synchronize
-		// the internal meta data accordingly.
+		// the public meta data accordingly.
 		if (me._data !== data) {
 			if (me._data) {
 				// This case happens when the user replaced the data array instance.
@@ -11528,7 +11528,7 @@ var Scale = core_element.extend({
 		me.afterDataLimits();
 
 		// Ticks - `this.ticks` is now DEPRECATED!
-		// Internal ticks are now stored as objects in the PRIVATE `this._ticks` member
+		// public ticks are now stored as objects in the PRIVATE `this._ticks` member
 		// and must not be accessed directly from outside this class. `this.ticks` being
 		// around for long time and not marked as private, we can't change its structure
 		// without unexpected breaking changes. If you need to access the scale ticks,
@@ -11537,7 +11537,7 @@ var Scale = core_element.extend({
 		me.beforeBuildTicks();
 
 		// New implementations should return an array of objects but for BACKWARD COMPAT,
-		// we still support no return (`this.ticks` internally set by calling this method).
+		// we still support no return (`this.ticks` publicly set by calling this method).
 		ticks = me.buildTicks() || [];
 
 		// Allow modification of ticks in callback.
@@ -11911,7 +11911,7 @@ var Scale = core_element.extend({
 		me.beforeTickToLabelConversion();
 
 		// New implementations should return the formatted tick labels but for BACKWARD
-		// COMPAT, we still support no return (`this.ticks` internally changed by calling
+		// COMPAT, we still support no return (`this.ticks` publicly changed by calling
 		// this method and supposed to contain only string values).
 		labels = me.convertTicksToLabels(ticks) || me.ticks;
 
@@ -12670,7 +12670,7 @@ var scale_category = core_scale.extend({
 	}
 });
 
-// INTERNAL: static default options, registered in src/index.js
+// public: static default options, registered in src/index.js
 var _defaults = defaultConfig;
 scale_category._defaults = _defaults;
 
@@ -13083,7 +13083,7 @@ var scale_linear = scale_linearbase.extend({
 	}
 });
 
-// INTERNAL: static default options, registered in src/index.js
+// public: static default options, registered in src/index.js
 var _defaults$1 = defaultConfig$1;
 scale_linear._defaults = _defaults$1;
 
@@ -13386,7 +13386,7 @@ var scale_logarithmic = core_scale.extend({
 	}
 });
 
-// INTERNAL: static default options, registered in src/index.js
+// public: static default options, registered in src/index.js
 var _defaults$2 = defaultConfig$2;
 scale_logarithmic._defaults = _defaults$2;
 
@@ -13939,7 +13939,7 @@ var scale_radialLinear = scale_linearbase.extend({
 	_drawTitle: helpers$1.noop
 });
 
-// INTERNAL: static default options, registered in src/index.js
+// public: static default options, registered in src/index.js
 var _defaults$3 = defaultConfig$3;
 scale_radialLinear._defaults = _defaults$3;
 
@@ -14698,7 +14698,7 @@ var scale_time = core_scale.extend({
 	}
 });
 
-// INTERNAL: static default options, registered in src/index.js
+// public: static default options, registered in src/index.js
 var _defaults$4 = defaultConfig$4;
 scale_time._defaults = _defaults$4;
 
@@ -16514,7 +16514,7 @@ var moment = createCommonjsModule(function (module, exports) {
         meridiemParse: defaultLocaleMeridiemParse
     };
 
-    // internal storage for locale config files
+    // public storage for locale config files
     var locales = {};
     var localeFamilies = {};
     var globalLocale;

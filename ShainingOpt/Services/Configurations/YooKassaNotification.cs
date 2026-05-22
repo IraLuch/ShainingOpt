@@ -1,6 +1,6 @@
 ﻿using Yandex.Checkout.V3;
 
-namespace ShainingOpt.ViewModels
+namespace ShainingOpt.Services.Configurations
 {
     public class YooKassaNotification
     {

@@ -1,16 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 using ShainingOpt.Mappers;
-using ShainingOpt.Models;
 using ShainingOpt.Services;
-using ShainingOpt.ViewModels;
-using System.Text;
+using ShainingOpt.ViewModels.Account;
 
 namespace ShainingOpt.Controllers
 {
-
+    /// <summary>
+    /// Контроллер для управления учетными записями пользователей
+    /// </summary>
     public class AccountController : Controller
     {
       
@@ -24,6 +22,9 @@ namespace ShainingOpt.Controllers
             _cartService = cartService;
         }
 
+        /// <summary>
+        /// Отображение страницы личного кабинета клиента.
+        /// </summary>
         [HttpGet]
         [Authorize(Roles = "Client")]
         public async Task<IActionResult> Profile()
@@ -33,11 +34,6 @@ namespace ShainingOpt.Controllers
             if (user is null)
             {
                 return RedirectToAction("Register", "Account");
-            }
-            if (user.Company is null)
-            {
-               
-                return View(new ProfileViewModel { Email = user.Email, Phone = user.PhoneNumber });
             }
             var model = new ProfileViewModel
             {
@@ -53,6 +49,10 @@ namespace ShainingOpt.Controllers
             return View(model);
         }
 
+
+        /// <summary>
+        /// Обновление персональных данных пользователя и его организации.
+        /// </summary>
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> UpdateProfileData(UpdateProfileDataViewModel model)
@@ -60,10 +60,11 @@ namespace ShainingOpt.Controllers
             var user = await _accountService.GetCurrentUserAsync(User);
             if (user is null)
             {
-                return NotFound(); // страница ошибки
+                return NotFound();
             }
-            var profileModel = ProfileMapper.FromUpdateModel(model, user);
+            var profileModel = await _accountService.BuildProfileViewModelAsync(user, model);
             if (!ModelState.IsValid)
+
             {
                 var errors = ModelState.Values.SelectMany(e => e.Errors).Select(e => e.ErrorMessage).ToList();
 
@@ -82,7 +83,9 @@ namespace ShainingOpt.Controllers
             return View("Profile", profileModel);
         }
 
-
+        /// <summary>
+        /// Смена пароля пользователя из личного кабинета.
+        /// </summary>
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> UpdateSecurityDate(UpdateSecurityDataViewModel model)
@@ -112,12 +115,20 @@ namespace ShainingOpt.Controllers
             return View("Profile", profileModel);
         }
 
+
+        /// <summary>
+        /// Страница регистрации нового пользователя.
+        /// </summary>
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
+
+        /// <summary>
+        /// Обработка запроса на регистрацию клиента и его компании.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
@@ -141,6 +152,10 @@ namespace ShainingOpt.Controllers
         }
 
 
+        /// <summary>
+        /// Аутентификация пользователя. Поддерживает разделение ролей и склейку корзин.
+        /// </summary>
+        /// <remarks>Возвращает JSON, так как форма авторизации обрабатывается через AJAX.</remarks>
         [HttpPost]
         public async Task<IActionResult> Login([FromForm]LoginViewModel model)
         {
@@ -179,12 +194,19 @@ namespace ShainingOpt.Controllers
             return Ok(new { success = true, redirectUrl = redirectUrl });
         }
 
+        /// <summary>
+        /// Страница запроса на восстановление пароля.
+        /// </summary>
         [HttpGet]
         public IActionResult ResetPassword()
         {
             return View();
         }
 
+
+        /// <summary>
+        /// Генерация токена сброса пароля и отправка ссылки на Email.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> ResetPassword(string? email)
         {
@@ -210,6 +232,9 @@ namespace ShainingOpt.Controllers
             return View(nameof(ResetPassword));
         }
 
+        /// <summary>
+        /// Страница установки нового пароля (переход по ссылке из письма).
+        /// </summary>
         [HttpGet] 
         public async Task<IActionResult> NewPassword(string email, string token)
         {
@@ -223,6 +248,9 @@ namespace ShainingOpt.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Сохранение нового пароля после сброса.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> NewPassword( NewPasswordViewModel model)
         {
@@ -251,6 +279,10 @@ namespace ShainingOpt.Controllers
 
         }
 
+        /// <summary>
+        /// Выход из системы с очисткой гостевых кук корзины.
+        /// </summary>
+        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await _accountService.Logout();

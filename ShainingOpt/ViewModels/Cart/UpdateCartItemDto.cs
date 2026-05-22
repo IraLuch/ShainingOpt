@@ -1,4 +1,4 @@
-﻿namespace ShainingOpt.ViewModels
+﻿namespace ShainingOpt.ViewModels.Cart
 {
     public class UpdateCartItemDto
     {

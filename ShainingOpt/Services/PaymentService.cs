@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using ShainingOpt.Models;
-using ShainingOpt.ViewModels;
+using ShainingOpt.Services.Configurations;
 using Yandex.Checkout.V3;
 
 namespace ShainingOpt.Services

@@ -1,5 +1,5 @@
 ﻿using ShainingOpt.Models;
-using ShainingOpt.ViewModels;
+using ShainingOpt.ViewModels.Account;
 
 namespace ShainingOpt.Mappers
 {

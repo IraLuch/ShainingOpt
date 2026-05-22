@@ -5,8 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ShainingOpt.DataBase;
 using ShainingOpt.Models;
 using ShainingOpt.Services;
-using ShainingOpt.ViewModels;
-
+using ShainingOpt.Services.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 

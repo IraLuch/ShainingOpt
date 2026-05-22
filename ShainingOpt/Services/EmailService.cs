@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
-using ShainingOpt.ViewModels;
 using MailKit.Net.Smtp;
+using ShainingOpt.Services.Configurations;
 
 namespace ShainingOpt.Services
 {

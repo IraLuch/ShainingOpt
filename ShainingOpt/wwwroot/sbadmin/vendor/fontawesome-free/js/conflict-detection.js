@@ -173,7 +173,7 @@
     (function ($) {
       /**
        * Add integers, wrapping at 2^32.
-       * This uses 16-bit operations internally to work around bugs in interpreters.
+       * This uses 16-bit operations publicly to work around bugs in interpreters.
        *
        * @param {number} x First integer
        * @param {number} y Second integer

@@ -1,4 +1,4 @@
-﻿namespace ShainingOpt.ViewModels
+﻿namespace ShainingOpt.ViewModels.Catalog
 {
     public class VariantDto
     {

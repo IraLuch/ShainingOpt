@@ -5,10 +5,16 @@ using Org.BouncyCastle.Crypto.Prng;
 using ShainingOpt.Migrations;
 using ShainingOpt.Models;
 using ShainingOpt.Services;
-using ShainingOpt.ViewModels;
+using ShainingOpt.Services.Configurations;
+using ShainingOpt.ViewModels.Cart;
+using ShainingOpt.ViewModels.Orders;
 
 namespace ShainingOpt.Controllers
 {
+    /// <summary>
+    /// Контроллер для работы с корзиной покупок, оформления заказов 
+    /// и обработки платежей через внешние шлюзы (YooKassa).
+    /// </summary>
     public class CartController : Controller
     {
         private readonly AccountService _accountService;
@@ -24,6 +30,10 @@ namespace ShainingOpt.Controllers
             _catalogService = catalogService;
             _paymentService = paymentService;
         }
+
+        /// <summary>
+        /// Отображение страницы корзины для текущей сессии (гостевой или авторизованной).
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> Cart()
         {
@@ -46,8 +56,10 @@ namespace ShainingOpt.Controllers
             return View(model);
         }
 
-    
 
+        /// <summary>
+        /// Добавление товара в корзину (вызывается через AJAX).
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> AddToCart(int variantId, int productId, int quantity)
         {
@@ -65,6 +77,10 @@ namespace ShainingOpt.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Получение ID корзины из Cookies или генерация нового для анонимного пользователя.
+        /// </summary>
         private string GetOrCreateCartId()
         {
             var cartId = Request.Cookies["cartId"];
@@ -76,8 +92,12 @@ namespace ShainingOpt.Controllers
           
             return cartId;
         }
+
+        /// <summary>
+        /// Удаление определенной модификации товара из корзины.
+        /// </summary>
         [HttpPost]
-        public async Task<IActionResult> DeleteVsriantFromCart(int variantId)
+        public async Task<IActionResult> DeleteVariantFromCart(int variantId)
         {
             var cartId = GetOrCreateCartId();
 
@@ -92,6 +112,10 @@ namespace ShainingOpt.Controllers
             return View("Cart", model);
         }
 
+
+        /// <summary>
+        /// Обновление количества товара в корзине.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> UpdateCartItem([FromBody] UpdateCartItemDto model)
         {
@@ -101,6 +125,10 @@ namespace ShainingOpt.Controllers
             return Json(new { success = true });
         }
 
+
+        /// <summary>
+        /// Создание заказа на основе текущей корзины и перенаправление на платежный шлюз.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> CreateOrder(OrderViewModel model)
         {
@@ -142,8 +170,6 @@ namespace ShainingOpt.Controllers
                 var variant = item.ProductVariant;
                 variant.Quantity -= item.Quantity;
 
-                await _cartService.UpdateProductVariant(variant);
-
                 orderItems.Add(new OrderItem
                 {
                     VariantId = item.ProductVariantId,
@@ -168,6 +194,18 @@ namespace ShainingOpt.Controllers
             return Redirect(payment.Confirmation.ConfirmationUrl);
 
         }
+
+
+        /// <summary>
+        /// API-эндпоинт (Webhook) для обработки уведомлений от ЮKassa.
+        /// </summary>
+        /// <remarks>
+        /// КРИТИЧЕСКИЙ НЮАНС ДЛЯ:
+        /// Для работы этого эндпоинта в локальной среде (localhost) приложение должно быть доступно из внешней сети Интернет, 
+        /// чтобы серверы ЮKassa могли отправить POST-запрос. 
+        /// В данном проекте проброс портов и туннелирование реализованы с помощью утилиты Cloudflare Tunnel (cloudflared daemon).
+        /// URL-адрес вебхука в личном кабинете ЮKassa настраивается на выданный поддомен *.trycloudflare.com.
+        /// </remarks>
         [HttpPost]
         [IgnoreAntiforgeryToken]
         [Route("api/payment/webhook")]
@@ -195,6 +233,9 @@ namespace ShainingOpt.Controllers
 
         }
 
+        /// <summary>
+        /// Страница со списком заказов пользователя.
+        /// </summary>
         public async Task<IActionResult> Order()
         {
             var user = await _accountService.GetCurrentUserAsync(User);

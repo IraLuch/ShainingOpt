@@ -8,7 +8,7 @@
 <h1>Товары</h1>
 
 <p>
-    <a asp-area="Admin" asp-controller="Products" asp-action="Create">Добавить</a>
+    <a asp-area="Manager" asp-controller="Products" asp-action="Create">Добавить</a>
 </p>
 <table class="table">
     <thead>
@@ -56,9 +56,9 @@
                 @Html.DisplayFor(modelItem => item.Brand.BrandName)
             </td>
             <td>
-                <a asp-area="Admin" asp-controller="Products" asp-action="Edit" asp-route-id="@item.ProductId">Изменить</a> |
-                <a asp-area="Admin" asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId">Детали</a> |
-                <a asp-area="Admin" asp-controller="Products" asp-action="Delete" asp-route-id="@item.ProductId">Удалить</a>
+                    <a asp-area="Manager" asp-controller="Products" asp-action="Edit" asp-route-id="@item.ProductId">Изменить</a> |
+                    <a asp-area="Manager" asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId">Детали</a> |
+                    <a asp-area="Manager" asp-controller="Products" asp-action="Delete" asp-route-id="@item.ProductId">Удалить</a>
             </td>
         </tr>
 }

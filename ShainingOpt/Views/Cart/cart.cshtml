@@ -1,4 +1,4 @@
-@using ShainingOpt.ViewModels
+@using ShainingOpt.ViewModels.Cart
 @model CartViewModel
 @{
     Layout = "_Layout";
@@ -34,7 +34,7 @@
                                 <p class="error"> Товара временно нет в наличии.</p>
                             }
                                                           
-                            <form class="cart__item-actions" method="post" asp-action="DeleteVsriantFromCart" asp-controller="Cart">
+                            <form class="cart__item-actions" method="post" asp-action="DeleteVariantFromCart" asp-controller="Cart">
                             <div class="cart__quantity quantity ">
                                 <button type="button" class="cart__quantity-btn quantity-btn" data-action="minus">-</button>
                                     <input type="hidden" name="quantity" class="quantity-input" value="@item.Quantity" />

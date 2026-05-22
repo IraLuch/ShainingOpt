@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Bcpg;
 using ShainingOpt.DataBase;
 using ShainingOpt.Models;
 
@@ -14,19 +13,7 @@ namespace ShainingOpt.Services
             _context = context;
         }
 
-        internal async Task AddItemToCart(CartItem cartItem)
-        {
-            _context.CartItems.Add(cartItem);
-            await _context.SaveChangesAsync();
-        }
-
-        internal async Task CreateCart(string cartId, int? userId)
-        {
-            var cart = _context.Carts.Add(new Cart { CartId = Guid.Parse(cartId) , UserId = userId});
-            await _context.SaveChangesAsync();
-        }
-
-        internal async Task DeleteVariantFromCart(string cartId, int variantId)
+        public async Task DeleteVariantFromCart(string cartId, int variantId)
         {
             var cartItem = await _context.CartItems.FirstOrDefaultAsync(c => c.CartId == Guid.Parse(cartId) && c.ProductVariantId == variantId);
             _context.CartItems.Remove(cartItem);
@@ -80,7 +67,7 @@ namespace ShainingOpt.Services
             }
         }
 
-        internal async Task<Cart?> GetCart(string cartId, int? userId = null)
+        public async Task<Cart?> GetCart(string cartId, int? userId = null)
         {
 
             var guidCartId = Guid.Parse(cartId);
@@ -117,7 +104,7 @@ namespace ShainingOpt.Services
 
         }
 
-        internal async Task<List<CartItem>> GetCartItems(string cartId)
+        public async Task<List<CartItem>> GetCartItems(string cartId)
         {
             return await _context.CartItems.Include(v => v.ProductVariant).ThenInclude(pv => pv.Product)
                 .Include(v => v.ProductVariant).ThenInclude(pv => pv.Size)
@@ -130,13 +117,13 @@ namespace ShainingOpt.Services
             return await _context.CartItems.FirstOrDefaultAsync(i => i.CartItemId == cartItemId);
         }
 
-        internal async Task UpdateCartItem(CartItem cartItem, int quantity)
+        public async Task UpdateCartItem(CartItem cartItem, int quantity)
         {
             cartItem.Quantity = quantity;
             await _context.SaveChangesAsync();
         }
 
-        internal async Task<Order> CreateOrderWithItems(Order order, List<OrderItem> items)
+        public async Task<Order> CreateOrderWithItems(Order order, List<OrderItem> items)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -162,18 +149,18 @@ namespace ShainingOpt.Services
             }
         }
 
-        internal async Task<Order> GetOrderById(int orderId)
+        public async Task<Order> GetOrderById(int orderId)
         {
             return await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == orderId);
         }
 
-        internal async Task UpdateOrderStatus(Order order, OrderStatus status)
+        public async Task UpdateOrderStatus(Order order, OrderStatus status)
         {
             order.OrderStatus = status;
             await _context.SaveChangesAsync();
         }
 
-        internal async Task ClearCart(int userId)
+        public async Task ClearCart(int userId)
         {
             var cart = await _context.Carts.Include(c => c.Items).FirstOrDefaultAsync(c => c.UserId == userId);
             if (cart != null)
@@ -184,7 +171,7 @@ namespace ShainingOpt.Services
 
         }
 
-        internal async Task UpdateProductVariantQuantity(int orderId)
+        public async Task UpdateProductVariantQuantity(int orderId)
         {
             var orderItems = await _context.OrderItems
         .Where(o => o.OrderId == orderId)
@@ -202,21 +189,14 @@ namespace ShainingOpt.Services
             await _context.SaveChangesAsync();
         }
 
-        internal async Task CartToUser(string cartId, int? userId)
+        public async Task CartToUser(string cartId, int? userId)
         {
             var cart = await GetCart(cartId);
             cart.UserId = userId;
             await _context.SaveChangesAsync();
         }
 
-        internal async Task<List<OrderItem>> GetOrderItems(int id)
-        {
-            return await _context.OrderItems.Include(o => o.Order).Include(o => o.Variant).ThenInclude(pv => pv.Product)
-                .Include(o => o.Variant).ThenInclude(pv => pv.Size)
-                 .Include(v => v.Variant).ThenInclude(pv => pv.Color).Where(o => o.Order.UserId == id).ToListAsync();
-        }
-
-        internal async Task<List<Order>> GetOrders(int id)
+        public async Task<List<Order>> GetOrders(int id)
         {
             return await _context.Orders.Include(o => o.User)
                 .Include(o => o.OrderItems)
@@ -231,7 +211,7 @@ namespace ShainingOpt.Services
                 .Where(o => o.UserId == id).ToListAsync();
         }
 
-        internal async Task<Cart> GetCartByUser(int id)
+        public async Task<Cart> GetCartByUser(int id)
         {
             return await _context.Carts.Include(o => o.User).Include(o => o.Items).FirstOrDefaultAsync(c => c.UserId == id);
         }
@@ -240,25 +220,25 @@ namespace ShainingOpt.Services
         {
             if (!Guid.TryParse(cartIdString, out Guid guidCartId)) return;
 
-            // 1. Ищем корзину: сначала по UserId, если нет — по CartId
+            //Ищем корзину: сначала по UserId, если нет — по CartId
             var cart = await _context.Carts
                 .Include(c => c.Items)
                     .ThenInclude(i => i.ProductVariant)
                 .FirstOrDefaultAsync(c => (userId != null && c.UserId == userId) || c.CartId == guidCartId);
 
-            // 2. Если корзины нет вообще — создаем её
+            //Если корзины нет — создаем её
             if (cart == null)
             {
                 cart = new Cart { CartId = guidCartId, UserId = userId };
                 _context.Carts.Add(cart);
             }
-            // 3. Если нашли анонимную корзину, а пользователь залогинен — «усыновляем» её
+            //Если нашли анонимную корзину, а пользователь залогинен
             else if (cart.UserId == null && userId != null)
             {
                 cart.UserId = userId;
             }
 
-            // 4. Ищем, есть ли уже такой товар в корзине
+            //Ищем, есть ли уже такой товар в корзине
             var cartItem = cart.Items.FirstOrDefault(i => i.ProductVariantId == variantId);
 
             var variant = await _context.ProductVariants.FindAsync(variantId);
@@ -281,10 +261,6 @@ namespace ShainingOpt.Services
             await _context.SaveChangesAsync();
         }
 
-        internal async Task UpdateProductVariant(ProductVariant variant)
-        {
-
-            _context.ProductVariants.Update(variant);
-        }
+        
     }
 }

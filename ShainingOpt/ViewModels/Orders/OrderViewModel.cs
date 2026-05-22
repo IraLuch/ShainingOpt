@@ -1,7 +1,7 @@
 ﻿using ShainingOpt.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace ShainingOpt.ViewModels
+namespace ShainingOpt.ViewModels.Orders
 {
     public class OrderViewModel
     {
