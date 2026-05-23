@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShainingOpt.Models;
 using ShainingOpt.Services;
+using ShainingOpt.Services.Interfaces;
 using ShainingOpt.ViewModels;
 using ShainingOpt.ViewModels.Catalog;
 using System.Drawing;
@@ -14,9 +15,9 @@ namespace ShainingOpt.Controllers
     /// </summary>
     public class CatalogController: Controller
     {
-        private readonly CatalogService _catalogService;
+        private readonly ICatalogService _catalogService;
 
-        public CatalogController(CatalogService catalogService)
+        public CatalogController(ICatalogService catalogService)
         {
              _catalogService = catalogService;   
         }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ShainingOpt.Mappers;
 using ShainingOpt.Services;
+using ShainingOpt.Services.Interfaces;
 using ShainingOpt.ViewModels.Account;
 
 namespace ShainingOpt.Controllers
@@ -12,10 +13,10 @@ namespace ShainingOpt.Controllers
     public class AccountController : Controller
     {
       
-        private readonly AccountService _accountService;
-        private readonly EmailService _emailService;
-        private readonly CartService _cartService;
-        public AccountController(AccountService accountService, EmailService emailService, CartService cartService)
+        private readonly IAccountService _accountService;
+        private readonly IEmailService _emailService;
+        private readonly ICartService _cartService;
+        public AccountController(IAccountService accountService, IEmailService emailService, ICartService cartService)
         {
             _accountService = accountService;
             _emailService = emailService;

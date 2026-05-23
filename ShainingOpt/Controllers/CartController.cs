@@ -6,6 +6,7 @@ using ShainingOpt.Migrations;
 using ShainingOpt.Models;
 using ShainingOpt.Services;
 using ShainingOpt.Services.Configurations;
+using ShainingOpt.Services.Interfaces;
 using ShainingOpt.ViewModels.Cart;
 using ShainingOpt.ViewModels.Orders;
 
@@ -17,13 +18,13 @@ namespace ShainingOpt.Controllers
     /// </summary>
     public class CartController : Controller
     {
-        private readonly AccountService _accountService;
-        private readonly CartService _cartService;
-        private readonly CatalogService _catalogService;
-        private readonly PaymentService _paymentService;
+        private readonly IAccountService _accountService;
+        private readonly ICartService _cartService;
+        private readonly ICatalogService _catalogService;
+        private readonly IPaymentService _paymentService;
 
-        public CartController(CartService cartService, AccountService accountService, 
-            CatalogService catalogService, PaymentService paymentService)
+        public CartController(ICartService cartService, IAccountService accountService, 
+            ICatalogService catalogService, IPaymentService paymentService)
         {
             _cartService = cartService;
             _accountService = accountService;
