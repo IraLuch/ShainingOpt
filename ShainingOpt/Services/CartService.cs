@@ -2,10 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using ShainingOpt.DataBase;
 using ShainingOpt.Models;
+using ShainingOpt.Services.Interfaces;
 
 namespace ShainingOpt.Services
 {
-    public class CartService
+    public class CartService : ICartService
     {
         private readonly AppDbContext _context;
         public CartService(AppDbContext context)
@@ -34,14 +35,14 @@ namespace ShainingOpt.Services
 
             if (anonymousCart != null && anonymousCart.Items.Any())
             {
-             
+
                 if (userCart == null)
                 {
                     anonymousCart.UserId = userId;
                 }
                 else
                 {
-               
+
                     foreach (var item in anonymousCart.Items)
                     {
                         var existingItem = userCart.Items
@@ -52,7 +53,7 @@ namespace ShainingOpt.Services
                             var maxQuntity = item.ProductVariant.Quantity;
                             var needQuntity = existingItem.Quantity + item.Quantity;
                             existingItem.Quantity = Math.Min(maxQuntity, needQuntity);
-                           
+
                         }
                         else
                         {
@@ -60,7 +61,7 @@ namespace ShainingOpt.Services
                             userCart.Items.Add(item);
                         }
                     }
-                    _context.Carts.Remove(anonymousCart); 
+                    _context.Carts.Remove(anonymousCart);
                 }
 
                 await _context.SaveChangesAsync();
@@ -93,7 +94,7 @@ namespace ShainingOpt.Services
                 _context.Carts.Add(cart);
                 await _context.SaveChangesAsync();
             }
-            
+
             else if (userId != null && cart.UserId == null)
             {
                 cart.UserId = userId;
@@ -109,7 +110,7 @@ namespace ShainingOpt.Services
             return await _context.CartItems.Include(v => v.ProductVariant).ThenInclude(pv => pv.Product)
                 .Include(v => v.ProductVariant).ThenInclude(pv => pv.Size)
                  .Include(v => v.ProductVariant).ThenInclude(pv => pv.Color)
-                .Where(c => c.CartId == Guid.Parse(cartId)).ToListAsync();   
+                .Where(c => c.CartId == Guid.Parse(cartId)).ToListAsync();
         }
 
         public async Task<CartItem> GetCartItemById(int cartItemId)
@@ -128,8 +129,8 @@ namespace ShainingOpt.Services
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
                 foreach (var item in items)
                 {
                     item.OrderId = order.OrderId;
@@ -142,9 +143,9 @@ namespace ShainingOpt.Services
                 return order;
 
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
-              await transaction.RollbackAsync();
+                await transaction.RollbackAsync();
                 return null;
             }
         }
@@ -261,6 +262,6 @@ namespace ShainingOpt.Services
             await _context.SaveChangesAsync();
         }
 
-        
+
     }
 }

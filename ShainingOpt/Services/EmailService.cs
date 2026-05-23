@@ -2,11 +2,12 @@
 using MimeKit;
 using MimeKit.Text;
 using MailKit.Net.Smtp;
+using ShainingOpt.Services.Interfaces;
 using ShainingOpt.Services.Configurations;
 
 namespace ShainingOpt.Services
 {
-    public class EmailService
+    public class EmailService : IEmailService
     {
         private readonly SmtpSettings _options;
 

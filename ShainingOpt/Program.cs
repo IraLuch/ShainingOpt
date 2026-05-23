@@ -6,11 +6,9 @@ using ShainingOpt.DataBase;
 using ShainingOpt.Models;
 using ShainingOpt.Services;
 using ShainingOpt.Services.Configurations;
+using ShainingOpt.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
-
-
-//builder.WebHost.UseUrls("http://localhost:5212");
 
 
 
@@ -53,14 +51,14 @@ builder.Services.AddIdentity<User, Role>(options =>
 // (нужны для сброса пароля, подтверждения email и т.д.)
 .AddDefaultTokenProviders();
 
-builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 builder.Services.Configure<YooKassaSettings>(
     builder.Configuration.GetSection("YooKassa"));
-builder.Services.AddScoped<PaymentService>();
-builder.Services.AddScoped<CatalogService>();
-builder.Services.AddScoped<CartService>();
-builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<IPaymentService,PaymentService>();
+builder.Services.AddScoped<ICatalogService, CatalogService>();
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 builder.Services.ConfigureApplicationCookie(options =>

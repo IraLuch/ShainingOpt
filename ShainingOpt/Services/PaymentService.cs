@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.Options;
 using ShainingOpt.Models;
 using ShainingOpt.Services.Configurations;
+using ShainingOpt.Services.Interfaces;
 using Yandex.Checkout.V3;
 
 namespace ShainingOpt.Services
 {
-    public class PaymentService
+    public class PaymentService : IPaymentService
     {
         private readonly Client _client;
 
@@ -39,6 +40,6 @@ namespace ShainingOpt.Services
             return _client.CreatePayment(payment);
         }
 
-    
+
     }
 }

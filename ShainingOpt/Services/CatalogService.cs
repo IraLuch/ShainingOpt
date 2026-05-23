@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShainingOpt.DataBase;
 using ShainingOpt.Models;
+using ShainingOpt.Services.Interfaces;
 
 namespace ShainingOpt.Services
 {
-    public class CatalogService
+    public class CatalogService : ICatalogService
     {
 
         private readonly AppDbContext _context;
@@ -37,11 +38,11 @@ namespace ShainingOpt.Services
 
         public async Task<List<Product>> GetProducts()
         {
-           return await _context.Products.Where(p => p.IsActive).Include(p => p.Category)
-                .Include(p => p.Brand)
-                .Include (p => p.Category)
-                .Include(p => p.ProductVariants)
-                .ToListAsync();
+            return await _context.Products.Where(p => p.IsActive).Include(p => p.Category)
+                 .Include(p => p.Brand)
+                 .Include(p => p.Category)
+                 .Include(p => p.ProductVariants)
+                 .ToListAsync();
         }
 
         public async Task<Product> GetProductWithVariants(int productId)

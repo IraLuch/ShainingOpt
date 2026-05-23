@@ -4,12 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using ShainingOpt.DataBase;
 using ShainingOpt.Mappers;
 using ShainingOpt.Models;
+using ShainingOpt.Services.Interfaces;
 using ShainingOpt.ViewModels.Account;
 using System.Security.Claims;
 
 namespace ShainingOpt.Services
 {
-    public class AccountService
+    public class AccountService : IAccountService
     {
 
 
@@ -39,7 +40,7 @@ namespace ShainingOpt.Services
                 UserName = model.Email,
                 PhoneNumber = model.PhoneNumber,
                 RoleId = clientRole.Id
-                
+
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -49,24 +50,24 @@ namespace ShainingOpt.Services
 
             }
 
-                await _userManager.AddToRoleAsync(user, "Client");
+            await _userManager.AddToRoleAsync(user, "Client");
 
-                var company = new Company
-                {
-                    UserId = user.Id,
-                    CompanyName = model.CompanyName,
-                    Inn = model.Inn,
-                    Kpp = model.Kpp,
-                    LegalAddress = model.LegalAddress,
-                    ContactPerson = model.ContactPerson
-                };
+            var company = new Company
+            {
+                UserId = user.Id,
+                CompanyName = model.CompanyName,
+                Inn = model.Inn,
+                Kpp = model.Kpp,
+                LegalAddress = model.LegalAddress,
+                ContactPerson = model.ContactPerson
+            };
 
-                _context.Companies.Add(company);
-                await _context.SaveChangesAsync();
-                return IdentityResult.Success;
+            _context.Companies.Add(company);
+            await _context.SaveChangesAsync();
+            return IdentityResult.Success;
 
-                
-            
+
+
 
         }
 
@@ -84,7 +85,7 @@ namespace ShainingOpt.Services
                 return IdentityResult.Failed();
             }
             return IdentityResult.Success;
-    }
+        }
 
         public async Task<User?> UserExsiting(string email)
         {
@@ -99,7 +100,7 @@ namespace ShainingOpt.Services
 
         public async Task<IdentityResult> ResetPasswordAsync(User user, NewPasswordViewModel model)
         {
-            var res = await _userManager.ResetPasswordAsync(user, model.Token ,model.NewPassword);
+            var res = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
             return res;
 
         }
@@ -127,7 +128,7 @@ namespace ShainingOpt.Services
 
                 return result;
             }
-            catch 
+            catch
             {
                 return IdentityResult.Failed();
             }
@@ -135,7 +136,7 @@ namespace ShainingOpt.Services
 
         public async Task<IdentityResult> UpdateSecurityData(User user, UpdateSecurityDataViewModel model)
         {
-            var res = await _userManager.ChangePasswordAsync(user, model.Password, model.NewPassword) ;
+            var res = await _userManager.ChangePasswordAsync(user, model.Password, model.NewPassword);
             return res;
         }
 
@@ -176,7 +177,7 @@ namespace ShainingOpt.Services
 
         public async Task Logout()
         {
-           await _signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync();
         }
 
         public async Task<bool> IsInRoleAsync(User? user, string v)
@@ -184,5 +185,6 @@ namespace ShainingOpt.Services
             var roles = await _userManager.GetRolesAsync(user);
             return await _userManager.IsInRoleAsync(user, v);
         }
-    } }
+    }
+}
 
