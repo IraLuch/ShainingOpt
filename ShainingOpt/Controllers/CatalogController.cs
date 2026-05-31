@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ShainingOpt.Helpers;
 using ShainingOpt.Models;
 using ShainingOpt.Services;
 using ShainingOpt.Services.Interfaces;
@@ -23,6 +24,9 @@ namespace ShainingOpt.Controllers
         }
 
 
+     
+
+
         /// <summary>
         /// Вспомогательный метод для сборки комплексной ViewModel каталога.
         /// Выполняет пагинацию коллекции товаров и подгружает списки для фильтров SideBar.
@@ -37,10 +41,9 @@ namespace ShainingOpt.Controllers
     int pageSize = 15,
     int pageNumber = 1)
         {
-            int totalPages = (int)Math.Ceiling(products.Count / (double)pageSize);
+
+            (int totalPages, int start, int end) = PaginationHelpers.CalculatePagination(products.Count, pageSize, pageNumber);
             products = products.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-            var start = Math.Max(1, pageNumber - 2);
-            var end = Math.Min(pageNumber + 2, totalPages);
 
             return new CatalogViewModel{
                 Products = products,

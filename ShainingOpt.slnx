@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="ShainingOpt.UnitTests/ShainingOpt.UnitTests.csproj" Id="ecdb19d9-69cb-4fd8-91ac-57b1936e47de" />
   <Project Path="ShainingOpt/ShainingOpt.csproj" />
 </Solution>
