@@ -1,12 +1,13 @@
 ﻿
 
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ShainingOpt.Models;
 
 namespace ShainingOpt.DataBase
 {
-    public class AppDbContext: IdentityDbContext<User,Role, int>
+    public class AppDbContext: IdentityDbContext<User, IdentityRole<int>, int>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options): base(options) { }
         public DbSet<Category> Categories { get; set; }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ShainingOpt.Mappers;
 using ShainingOpt.Services;
+using ShainingOpt.Services.Interfaces;
 using ShainingOpt.ViewModels.Account;
 
 namespace ShainingOpt.Areas_Admin_Controllers
@@ -16,8 +17,8 @@ namespace ShainingOpt.Areas_Admin_Controllers
     public class AccountController : Controller
     {
       
-        private readonly AccountService _accountService;
-        public AccountController(AccountService accountService)
+        private readonly IAccountService _accountService;
+        public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
          

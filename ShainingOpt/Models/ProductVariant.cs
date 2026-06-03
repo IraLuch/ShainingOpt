@@ -4,11 +4,13 @@ namespace ShainingOpt.Models
 {
     public class ProductVariant
     {
+
         public int ProductVariantId { get; set; }
 
         [Required(ErrorMessage = "Введите продукт" )]
         [Display(Name ="Товар")]
         public int ProductId { get; set; }
+        [Display(Name = "Товар")]
         public Product? Product { get; set; }
 
         public int ColorId { get; set; }
@@ -20,6 +22,7 @@ namespace ShainingOpt.Models
         [Display(Name = "Размер")]
         [Required(ErrorMessage = "Выберите размер")]
         public int SizeId { get; set; }
+        [Display(Name = "Размер")]
         public Size? Size { get; set; }
 
         [Display(Name = "Количество на складе")]

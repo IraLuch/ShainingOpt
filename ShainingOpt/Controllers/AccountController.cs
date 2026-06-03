@@ -27,7 +27,7 @@ namespace ShainingOpt.Controllers
         /// Отображение страницы личного кабинета клиента.
         /// </summary>
         [HttpGet]
-        [Authorize(Roles = "Client")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Profile()
         {
 

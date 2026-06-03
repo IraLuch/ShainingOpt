@@ -12,7 +12,9 @@
                 </div>
                 <div class="info__btns">
                     <a asp-controller="Cart" asp-action="Order" class="info__btn btn">Мои заказы</a>
-                    <a asp-controller="Account" asp-action="Logout" class="info__btn btn info__btn--red">Выйти</a>
+            <form method="post" asp-action="Logout" asp-controller="Account" >
+                <button type="submit" class="info__btn btn info__btn--red">Выйти</button>
+            </form>
                 </div>
             </div>
         </section>

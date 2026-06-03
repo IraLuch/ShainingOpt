@@ -1,8 +1,6 @@
 ﻿using MailKit.Search;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Crypto.Prng;
-using ShainingOpt.Migrations;
 using ShainingOpt.Models;
 using ShainingOpt.Services;
 using ShainingOpt.Services.Configurations;

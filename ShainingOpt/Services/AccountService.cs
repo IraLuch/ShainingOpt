@@ -17,8 +17,8 @@ namespace ShainingOpt.Services
         private readonly AppDbContext _context;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly RoleManager<Role> _roleManager;
-        public AccountService(AppDbContext context, UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager)
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
+        public AccountService(AppDbContext context, UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager, SignInManager<User> signInManager)
         {
             _context = context;
             _userManager = userManager;
@@ -33,7 +33,7 @@ namespace ShainingOpt.Services
                 return IdentityResult.Failed();
 
             }
-            var clientRole = await _roleManager.FindByNameAsync("Client");
+            var clientRole = await _roleManager.FindByNameAsync("User");
             var user = new User
             {
                 Email = model.Email,
@@ -50,7 +50,7 @@ namespace ShainingOpt.Services
 
             }
 
-            await _userManager.AddToRoleAsync(user, "Client");
+            await _userManager.AddToRoleAsync(user, "User");
 
             var company = new Company
             {

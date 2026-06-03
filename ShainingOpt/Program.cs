@@ -19,37 +19,19 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
-builder.Services.AddIdentity<User, Role>(options =>
-{
+builder.Services
+    .AddIdentity<User, IdentityRole<int>>(options =>
+    {
+        options.Password.RequireDigit = true;
+        options.Password.RequiredLength = 6;
+        options.Password.RequireUppercase = true;
+        options.Password.RequireNonAlphanumeric = true;
+    })
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
 
-    // Требовать ли цифры (0-9) в пароле
-    // false = можно создавать пароль без цифр
-    options.Password.RequireDigit = true;
 
-    // Минимальная длина пароля
-    // 6 = пароль должен быть не короче 6 символов
-    options.Password.RequiredLength = 6;
 
-    // Требовать ли заглавные буквы (A-Z) в пароле
-    // false = можно использовать только строчные буквы
-    options.Password.RequireUppercase = true;
-
-    // Требовать ли специальные символы (!,@,#,$,%, etc.) в пароле
-    // false = можно обойтись без спецсимволов
-    options.Password.RequireNonAlphanumeric = true;
-
-    //options.User.RequireUniqueEmail = true; // требовать уникальный email
-    // options.Lockout.MaxFailedAccessAttempts = 5; // блокировка после 5 попыток
-    // options.SignIn.RequireConfirmedEmail = true; // требовать подтверждение email
-})
-
-// Указываем, что Identity будет использовать Entity Framework
-// для хранения данных о пользователях и ролях
-.AddEntityFrameworkStores<AppDbContext>()
-
-// Добавляем провайдеры для генерации токенов
-// (нужны для сброса пароля, подтверждения email и т.д.)
-.AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IAccountService, AccountService>();
 
@@ -77,6 +59,17 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<AppDbContext>();
+    var userManager = services.GetRequiredService<UserManager<User>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole<int>>>();
+
+    await DbSeeder.SeedAsync(context, userManager, roleManager);
 }
 //using (var scope = app.Services.CreateScope())
 //{
