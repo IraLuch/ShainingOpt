@@ -55,7 +55,7 @@ namespace ShainingOpt.Services
 
         public async Task<ProductVariant> GetDefaultVariant(int productId)
         {
-            return await _context.ProductVariants.Include(c => c.Color).Include(s => s.Size).FirstOrDefaultAsync(p => p.ProductId == productId);
+            return await _context.ProductVariants.Include(c => c.Color).Include(s => s.Size).OrderBy(v => v.ProductVariantId).FirstOrDefaultAsync(p => p.ProductId == productId);
         }
 
         public async Task<ProductVariant> GetProductVariant(int? variantId)
@@ -67,8 +67,9 @@ namespace ShainingOpt.Services
         {
             var products = await GetProducts();
 
-            return products.Where(p => p.ProductName.ToLower().Contains(text) ||
-                p.Brand.BrandName.ToLower().Contains(text))
+
+            return products.Where(p => p.ProductName.ToLower().Contains(text.ToLower()) ||
+                p.Brand.BrandName.ToLower().Contains(text.ToLower()))
                 .ToList();
         }
     }
