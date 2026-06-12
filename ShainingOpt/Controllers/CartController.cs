@@ -82,11 +82,11 @@ namespace ShainingOpt.Controllers
         /// </summary>
         private string GetOrCreateCartId()
         {
-            var cartId = Request.Cookies["cartId"];
+            var cartId = Request?.Cookies["cartId"] ?? "";
             if (string.IsNullOrEmpty(cartId))
             {
                 cartId = Guid.NewGuid().ToString();
-                Response.Cookies.Append("cartId", cartId);
+                Response?.Cookies.Append("cartId", cartId);
             }
           
             return cartId;
@@ -118,10 +118,17 @@ namespace ShainingOpt.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateCartItem([FromBody] UpdateCartItemDto model)
         {
+            try
+            {
             var cartItem = await _cartService.GetCartItemById(model.CartItemId);
-
             await _cartService.UpdateCartItem(cartItem, cartItem.Quantity + model.Quantity);
             return Json(new { success = true });
+
+            }
+            catch
+            {
+                return Json(new { success = false, message = "Ошибка при обновлении корзины" });
+            }
         }
 
 
@@ -238,10 +245,6 @@ namespace ShainingOpt.Controllers
         public async Task<IActionResult> Order()
         {
             var user = await _accountService.GetCurrentUserAsync(User);
-            if (user == null)
-            {
-                return View("Index", "Home");
-            }
             var orders = await _cartService.GetOrders(user.Id);
             var model = new OrderViewModel
             {
