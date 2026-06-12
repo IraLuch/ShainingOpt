@@ -8,7 +8,6 @@ namespace ShainingOpt.Models
         public int OrderItemId { get; set; }
 
         [Display(Name = "Заказ")]
-        [Required(ErrorMessage ="Введите номер заказа")]
         public int? OrderId { get; set; }
 
         [Display(Name = "Товар")]

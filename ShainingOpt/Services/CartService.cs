@@ -17,6 +17,7 @@ namespace ShainingOpt.Services
         public async Task DeleteVariantFromCart(string cartId, int variantId)
         {
             var cartItem = await _context.CartItems.FirstOrDefaultAsync(c => c.CartId == Guid.Parse(cartId) && c.ProductVariantId == variantId);
+            if (cartItem == null) return;
             _context.CartItems.Remove(cartItem);
             await _context.SaveChangesAsync();
         }
