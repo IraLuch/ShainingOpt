@@ -51,62 +51,7 @@ namespace ShainingOpt.UnitTests.Controller
 
         }
 
-        private async Task<(Product product, ProductVariant variant)> CreateProductWithVariant(AppDbContext context)
-        {
-            var brand = new Brand
-            {
-                BrandName = "Nike"
-            };
-
-            var category = new Category
-            {
-                CategoryName = "Футболки",
-                IsActive = true
-            };
-
-            var color = new Color
-            {
-                ColorName = "Черный"
-            };
-
-            var size = new Size
-            {
-                SizeName = "M"
-            };
-
-            context.Brands.Add(brand);
-            context.Categories.Add(category);
-            context.Colors.Add(color);
-            context.Sizes.Add(size);
-
-            await context.SaveChangesAsync();
-
-            var product = new Product
-            {
-                ProductName = "Футболка",
-                WholesalePrice = 1200,
-                IsActive = true,
-                BrandId = brand.BrandId,
-                CategoryId = category.CategoryId
-            };
-
-            context.Products.Add(product);
-            await context.SaveChangesAsync();
-
-            var variant = new ProductVariant
-            {
-                ProductId = product.ProductId,
-                ColorId = color.ColorId,
-                SizeId = size.SizeId,
-                Quantity = 10,
-                MinOrderQuantity = 2
-            };
-
-            context.ProductVariants.Add(variant);
-            await context.SaveChangesAsync();
-
-            return (product, variant);
-        }
+       
 
         [Fact]
         public async Task CartController_AddToCart_ReturnSuccess()

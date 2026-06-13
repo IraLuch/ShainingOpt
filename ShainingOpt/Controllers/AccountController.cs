@@ -173,21 +173,21 @@ namespace ShainingOpt.Controllers
             }
 
             var user = await _accountService.GetCurrentUserAsync(User);
-            string redirectUrl = Url.Action("Profile", "Account"); 
+            string redirectUrl = "/Account/Profile";
 
             if (await _accountService.IsInRoleAsync(user, "Admin"))
             {
-                redirectUrl = Url.Action("Products", "Admin");
+                redirectUrl = "/Admin/Products";
                 return Ok(new { success = true, redirectUrl = redirectUrl });
             }
             if (await _accountService.IsInRoleAsync(user, "Manager"))
             {
-                redirectUrl = Url.Action("Products", "Manager");
+                redirectUrl = "/Manager/Products";
                 return Ok(new { success = true, redirectUrl = redirectUrl });
             }
 
 
-            var cartId = Request.Cookies["cartId"];
+            var cartId = Request?.Cookies["cartId"];
             await _cartService.MergeCarts(cartId, user.Id);
 
 
